@@ -6,12 +6,12 @@ namespace ijunior
     {
         static void Main(string[] args)
         {
-            int picture = 52; //общее число картинок
-            int picInRow = 3; //число картинок в одном ряду
-            int row = picture / picInRow; //вычисляем количество заполненных рядов
-            int picWithot = picture - row * picInRow; //вычисляем количество оставшихся картинок
-            Console.WriteLine($"Общее число картинок: {picture}\n Число картинок в одном ряду: {picInRow}\n" +
-                $" Количество полностью заполенных рядов: {row}\n Картинки сверх меры: {picWithot}");
+            int picture = 52; 
+            int pictureInRow = 3;
+            int rowWithPicture = picture / pictureInRow; 
+            int alonePicture = picture - rowWithPicture * pictureInRow; 
+            Console.WriteLine($"Общее число картинок: {picture}\nЧисло картинок в одном ряду: {pictureInRow}\n" +
+                $"Количество полностью заполенных рядов: {rowWithPicture}\nКартинки сверх меры: {alonePicture}");
         }
     }
 }
