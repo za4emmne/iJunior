@@ -12,6 +12,7 @@ namespace lesson
             message = Console.ReadLine();
             Console.Write("Введите количество повторов: ");
             repead = Convert.ToInt32(Console.ReadLine());
+            
            for (int i=0 ;i<repead;i++)
             {
                 Console.WriteLine(message);
