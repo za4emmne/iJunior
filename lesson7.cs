@@ -12,7 +12,7 @@ namespace lesson
             int minuteInHour = 60;
             int waitTime = oldWomen * speedMove;
             int waitHours = waitTime / minuteInHour;
-            int waitMinute = waitTime % 60;
+            int waitMinute = waitTime % minuteInHour;
             Console.WriteLine($"Вы должны стоять в очереди {waitHours} часа {waitMinute} минут.");
 
         }
