@@ -6,22 +6,23 @@ namespace lesson
     {
         static void Main(string[] args)
         {
-            string exit = "exit";
+            string message;
             bool isExit = false;
             int itteration = 1;
             Console.WriteLine("Запустился счетчик иттераций");
-            
-            while(isExit == false)
-                    {
+
+            while (isExit == false)
+            {
                 Console.Write("Нажмините любую клавишу чтобы продолжить, либо введите exit, чтобы выйти: ");
-                exit = Console.ReadLine(); 
+               message = Console.ReadLine();
                 Console.WriteLine(itteration++);
-                if (exit == "exit")
+
+                if (message == "exit")
                 {
                     isExit = true;
                 }
 
-                    }
-        }
+            }
         }
     }
+}
