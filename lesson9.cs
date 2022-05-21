@@ -17,6 +17,7 @@ namespace lesson
                 Console.Write("Нажмините любую клавишу чтобы продолжить, либо введите "+ exit +", чтобы выйти: ");
                 message = Console.ReadLine();
                 Console.WriteLine(itteration++);
+                
                 if (message == exit)
                 {
                     isExit = true;
