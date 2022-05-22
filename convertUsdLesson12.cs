@@ -10,9 +10,9 @@ namespace lesson
             float balanceUsd;
             float balanceEu;
             float rubToUsd = 60;
-            float usdToRub = 1/63f;
             float rubToEur = 65;
-            float eurToRub = 1/67f;
+            float usdToRub = 63;           
+            float eurToRub = 67;
             float usdToEur = rubToUsd / rubToEur;
             float eurToUsd = rubToEur / rubToUsd;
             string chooseClient;
@@ -32,7 +32,7 @@ namespace lesson
                 Console.WriteLine("Если хотите перевести из рублей в доллары введите - 1");
                 Console.WriteLine("Если хотите перевести из рублей в евро введите - 2");
                 Console.WriteLine("Если хотите перевести из доллары в рубли введите - 3");
-                Console.WriteLine("Если хотите перевести из доллары в евро введите - 4");
+                Console.WriteLine("Если хотите перевести из евро в доллары введите - 4");
                 Console.WriteLine("Если хотите перевести из евро в рубли введите - 5");
                 Console.WriteLine("Если хотите перевести из долларов в евро введите - 6");
                 Console.WriteLine("Если хотите выйти введите - exit");
@@ -45,7 +45,7 @@ namespace lesson
                         Console.Write("Введите сколько хотите обменять рублей на доллары: ");
                         changeMoney = Convert.ToSingle(Console.ReadLine());
 
-                        if (balanceRub > changeMoney)
+                        if (balanceRub >= changeMoney)
                         {
                             balanceRub -= changeMoney;
                             balanceUsd += changeMoney / rubToUsd;
@@ -60,7 +60,7 @@ namespace lesson
                         Console.Write("Введите сколько хотите обменять рублей на евро: ");
                         changeMoney = Convert.ToSingle(Console.ReadLine());
 
-                        if (balanceRub > changeMoney)
+                        if (balanceRub >= changeMoney)
                         {
                             balanceRub -= changeMoney;
                             balanceEu += changeMoney / rubToEur;
@@ -75,10 +75,10 @@ namespace lesson
                         Console.Write("Введите сколько хотите обменять долларов на рубли: ");
                         changeMoney = Convert.ToSingle(Console.ReadLine());
 
-                        if (balanceUsd > changeMoney)
+                        if (balanceUsd >= changeMoney)
                         {
                             balanceUsd -= changeMoney;
-                            balanceRub += changeMoney * usdToRub;
+                            balanceRub += changeMoney / usdToRub;
                         }
                         else
                         {
@@ -86,14 +86,14 @@ namespace lesson
                         }
                         break;
                     case "4":
-                        Console.WriteLine("Курс валюты: " + usdToEur);
-                        Console.Write("Введите сколько хотите обменять долларов на евро: ");
+                        Console.WriteLine("Курс валюты: " + eurToUsd);
+                        Console.Write("Введите сколько хотите обменять евро на доллары: ");
                         changeMoney = Convert.ToSingle(Console.ReadLine());
 
-                        if (balanceUsd > changeMoney)
+                        if (balanceUsd >= changeMoney)
                         {
                             balanceUsd -= changeMoney;
-                            balanceEu += changeMoney * usdToEur;
+                            balanceEu += changeMoney / eurToUsd;
                         }
                         else
                         {
@@ -105,10 +105,10 @@ namespace lesson
                         Console.Write("Введите сколько хотите обменять евро на рубли: ");
                         changeMoney = Convert.ToSingle(Console.ReadLine());
 
-                        if (balanceEu > changeMoney)
+                        if (balanceEu >= changeMoney)
                         {
                             balanceEu -= changeMoney;
-                            balanceRub += changeMoney * eurToRub;
+                            balanceRub += changeMoney / eurToRub;
                         }
                         else
                         {
@@ -120,10 +120,10 @@ namespace lesson
                         Console.Write("Введите сколько хотите обменять долларов на евро: ");
                         changeMoney = Convert.ToSingle(Console.ReadLine());
 
-                        if (balanceUsd > changeMoney)
+                        if (balanceUsd >= changeMoney)
                         {
                             balanceUsd -= changeMoney;
-                            balanceEu += changeMoney * usdToEur;
+                            balanceEu += changeMoney / usdToEur;
                         }
                         else
                         {
