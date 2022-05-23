@@ -7,12 +7,22 @@ namespace lesson
         static void Main(string[] args)
         {
             Random random = new Random();
-            int bossHealth = random.Next(1000, 1500);
-            int bossDamage = random.Next(100, 200);
-            int playerHealth = random.Next(500, 800);
-            int playerDamage = random.Next(100, 150);
+            int bossHealthFirst = 1000;
+            int bossHealthLast = 1500;
+            int bossHealth = random.Next(bossHealthFirst, bossHealthLast);
+            int bossDamageFirst = 100;
+            int bossDamageLast = 200;
+            int bossDamage = random.Next(bossDamageFirst, bossDamageLast);
+            int playerHealthFirst = 500;
+            int playerHealthLast = 800;
+            int playerHealth = random.Next(playerHealthFirst, playerHealthLast);
+            int playerDamageFirst = 100;
+            int playerDamageLast = 150;
+            int playerDamage = random.Next(playerDamageFirst, playerDamageLast);
             int playerDamageExalibur = 2;
-            int playerUltaVasilisk = random.Next(5, 25); 
+            int playerUltraFirst = 5;
+            int playerUltraLast = 25;
+            int playerUltaVasilisk = (random.Next(playerUltraFirst, playerUltraLast))/100;
             int playerFirstHealth = 100;
             int playerLastHealth = 300;
             int playerHealthPlus = random.Next(playerFirstHealth, playerLastHealth);
@@ -36,16 +46,16 @@ namespace lesson
                 Console.WriteLine(" 4 - Выпить лечебного зелья: восстанавливает от " + playerFirstHealth + " до " + playerLastHealth + " хп");
                 playerChoose = Console.ReadLine();
 
-                switch(playerChoose)
+                switch (playerChoose)
                 {
                     case "1":
-                        bossHealth -= playerDamage*playerDamageExalibur;
+                        bossHealth -= playerDamage * playerDamageExalibur;
                         isVasilisk = true;
                         Console.WriteLine("\nВы нанесли удар!!!\nЖизни босса: " + bossHealth);
                         break;
                     case "2":
                         isVasilisk = true;
-                        playerHealth = playerHealth - playerHealth * playerUltaVasilisk / 100;
+                        playerHealth = playerHealth - playerHealth * playerUltaVasilisk;
                         Console.WriteLine("\nВасилиск призван!\nЖизни игрока: " + playerHealth);
                         break;
                     case "3":
@@ -76,11 +86,11 @@ namespace lesson
                 Console.ReadKey();
             }
 
-            if (playerHealth<=0)
+            if (playerHealth <= 0)
             {
                 Console.WriteLine("\nБосс победил");
             }
-            else if (bossHealth<=0)
+            else if (bossHealth <= 0)
             {
                 Console.WriteLine("\nИгрок победил");
             }
