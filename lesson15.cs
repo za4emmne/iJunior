@@ -6,25 +6,22 @@ namespace lesson
     {
         static void Main(string[] args)
         {
-            Random rand = new Random();
-            int number = rand.Next(1, 28);
+            Random random = new Random();
+            int downNumberRandom = 1;
+            int topNumberRandom = 28;
+            int number = random.Next(downNumberRandom, topNumberRandom);
             int firstNumber = 100;
             int lastNumber = 1000;
             int secondNumber;
             int currentAimNumber = 0;
 
-            Console.WriteLine("Число из рандома в диапазоне от 1 до 27: " + number);
+            Console.WriteLine("Число из рандома в диапазоне от " + downNumberRandom + " до " + topNumberRandom + " является " + number);
 
-            for (int i = firstNumber; i < lastNumber; i++)
+            for (int i = 0; i < lastNumber; i+=number)
             {
                 secondNumber = i;
 
-                while(secondNumber>0)
-                {
-                    secondNumber -= number;
-                }
-
-                if(secondNumber==0)
+                if (secondNumber > 100)
                 {
                     currentAimNumber++;
                 }
