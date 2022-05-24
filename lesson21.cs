@@ -12,7 +12,7 @@ namespace lesson
             int minRandom = 1;
             int maxRandom = 4;
             int sumRow = 0;
-            int multColom = 1;
+            int multiplicationColom = 1;
             int numberRow = 1;
             int numberColom = 0;
 
@@ -34,10 +34,10 @@ namespace lesson
 
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
-                multColom *= matrix[i, numberColom];
+                multiplicationColom *= matrix[i, numberColom];
             }
             Console.WriteLine("\nСумма элементов второй строки: " + sumRow);
-            Console.WriteLine("\nПроизведение первого столбца: " + multColom);
+            Console.WriteLine("\nПроизведение первого столбца: " + multiplicationColom);
         }
     }
 }
