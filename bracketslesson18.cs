@@ -34,7 +34,7 @@ namespace lesson
 
                 if(deepInside<0)
                 {
-                    Console.WriteLine("Выражение некорректно!");
+                    break;
                 }
             }
 
@@ -42,7 +42,10 @@ namespace lesson
             {
                 Console.WriteLine("Выражение некорректно!");
             }
-            Console.WriteLine("Выражение корректно\nГлубина выражения = " + maxDeep);           
+            else
+            {
+                Console.WriteLine("Выражение корректно\nГлубина выражения = " + maxDeep);    
+            }                   
         }
     }
 }
