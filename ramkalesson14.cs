@@ -7,24 +7,28 @@ namespace lesson
         static void Main(string[] args)
         {
             string inputWord;
-            string inputSymbol;
-            int addSymbol = 3;
+            char inputSymbol;
+            string lineSymbol;
+            string line = "";
+            int addSymbol = 4;
+            int lineLength;
+            int lineWord;
 
             Console.Write("Введите слово: ");
             inputWord = Console.ReadLine();
             Console.Write("Введите символ: ");
-            inputSymbol = Console.ReadLine();
+            inputSymbol = Convert.ToChar(Console.ReadLine());
+            lineSymbol = Convert.ToString(inputSymbol);
+            lineWord = inputWord.Length;
+            lineLength = lineWord + addSymbol;
 
-            for(int i=0; i<= inputWord.Length+addSymbol; i++)
+            for (int i = 0; i < lineLength; i++)
             {
-                Console.Write(inputSymbol);
+                line += lineSymbol;
             }
-            Console.WriteLine("\n" + inputSymbol + " " + inputWord + " " + inputSymbol);
-
-            for (int i = 0; i <= inputWord.Length+addSymbol; i++)
-            {
-                Console.Write(inputSymbol);
-            }
+            Console.WriteLine("\n" + line);
+            Console.WriteLine(inputSymbol + " " + inputWord + " " + inputSymbol);
+            Console.WriteLine(line);
         }
     }
 }
