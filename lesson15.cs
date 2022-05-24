@@ -21,7 +21,7 @@ namespace lesson
             {
                 secondNumber = i;
 
-                if (secondNumber > 100)
+                if (secondNumber > firstNumber)
                 {
                     currentAimNumber++;
                 }
