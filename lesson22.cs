@@ -13,18 +13,30 @@ namespace lesson
             int minRandom = 0;
             int maxRandom = 10;
 
-            for (int i = 1; i < array.Length-1; i++)
+            for (int i = 1; i < array.Length - 1; i++)
             {
                 array[i] = random.Next(minRandom, maxRandom);
-                Console.Write(array[i] + " "); 
+                Console.Write(array[i] + " ");
             }
 
             for (int i = 1; i < array.Length - 1; i++)
             {
 
+                if (array[0] > array[1])
+                {
+                    number = array[0];
+                    Console.WriteLine("\nЛокальный максимум: " + number);
+                }
+
                 if (array[i] > array[i + 1] && array[i] > array[i - 1])
                 {
                     number = array[i];
+                    Console.WriteLine("\nЛокальный максимум: " + number);
+                }
+
+                if (array[arrayValue-1] > array[arrayValue - 2])
+                {
+                    number = array[arrayValue];
                     Console.WriteLine("\nЛокальный максимум: " + number);
                 }
             }
