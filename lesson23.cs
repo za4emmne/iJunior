@@ -7,7 +7,6 @@ namespace lesson
         static void Main(string[] args)
         {
             bool isExit = false;
-            bool isSum = false;
             string userInput = "";
             int number;
             int sum = 0;
@@ -31,7 +30,8 @@ namespace lesson
                             {
                                 sum += array[i];
                             }
-                            isSum = true;
+                            Console.WriteLine("Cумма элементов массива = " + sum + "\n");
+                            Console.ReadKey();
                             break;
                         }
                     default:
@@ -40,10 +40,6 @@ namespace lesson
                             array[array.Length - 1] = number;
                             int[] tempArray = new int[array.Length + 1];
 
-                            for (int i = 0; i < array.Length; i++)
-                            {
-                                Console.WriteLine(array[i]);
-                            }
 
                             for (int i = 0; i < array.Length; i++)
                             {
@@ -54,11 +50,6 @@ namespace lesson
                         }
                 }
                 Console.Clear();
-
-                if (isSum == true)
-                {
-                    Console.WriteLine("Cумма элементов массива = " + sum + "\n");
-                }
             }
         }
     }
