@@ -8,9 +8,7 @@ namespace lesson
         {
             bool isExit = false;
             string userInput = "";
-            int number;
-            int sum = 0;
-            int[] array = new int[1];
+            int[] array = new int[0];
 
             while (isExit == false)
             {
@@ -26,6 +24,8 @@ namespace lesson
                         }
                     case "sum":
                         {
+                            int sum = 0;
+
                             for (int i = 0; i < array.Length; i++)
                             {
                                 sum += array[i];
@@ -36,16 +36,16 @@ namespace lesson
                         }
                     default:
                         {
-                            number = Convert.ToInt32(userInput);
-                            array[array.Length - 1] = number;
+                            int number;
                             int[] tempArray = new int[array.Length + 1];
-
 
                             for (int i = 0; i < array.Length; i++)
                             {
                                 tempArray[i] = array[i];
                             }
                             array = tempArray;
+                            number = Convert.ToInt32(userInput);
+                            array[array.Length-1] = number;
                             break;
                         }
                 }
