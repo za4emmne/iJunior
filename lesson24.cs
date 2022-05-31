@@ -9,29 +9,39 @@ namespace lesson
             int arrayValue = 30;
             int[] array = new int[arrayValue];
             int randomDown = 0;
-            int randomTop = 4;
+            int randomTop = 10;
             Random random = new Random();
-            int number = 2;
-            int repeat = 0;
-            int repeatMount = 0;
+            int number = 0;
+            int repeat = 1;
+            int repeatMount = 1;
+            int numberMax = 0;
 
-            for (int i = 1; i < array.Length; i++)
+            for (int i = 0; i < arrayValue; i++)
             {
                 array[i] = random.Next(randomDown, randomTop);
                 Console.Write(array[i] + " ");
+            }
 
-                if (array[i-1] == array[i])
+            for (int i = 1; i < arrayValue; i++)
+            {
+
+                if (array[i - 1] == array[i])
                 {
                     repeat++;
                     number = array[i];
                 }
-                else if (repeat > repeatMount)
+                else
                 {
-                    repeatMount = repeat;
-                    repeat = 0;
+
+                    if (repeat > repeatMount)
+                    {
+                        repeatMount = repeat;
+                        numberMax = number;
+                    }
+                    repeat = 1;
                 }
             }
-            Console.WriteLine("\nЧисло - " + number + " повторяется " + repeatMount + " раз");
+            Console.WriteLine("\nЧисло - " + numberMax + " повторяется " + repeatMount + " раз");
         }
     }
 }
