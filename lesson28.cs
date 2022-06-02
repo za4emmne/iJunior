@@ -12,9 +12,9 @@ namespace lesson
             Console.Write("Введите количество жизней от " + minHealth + " до " + maxHealth + ": ");
             userInput = Convert.ToInt32(Console.ReadLine());
 
-            drawBar(userInput, maxHealth, ConsoleColor.Red);
+            DrawBar(userInput, maxHealth, ConsoleColor.Red);
 
-            static void drawBar(int value, int maxValue, ConsoleColor color)
+            static void DrawBar(int value, int maxValue, ConsoleColor color)
             {
                 ConsoleColor defaultColor = Console.BackgroundColor;
                 string bar = "";
