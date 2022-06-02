@@ -6,14 +6,15 @@ namespace lesson
     {
         static void Main(string[] args)
         {
+            int minHealth = 1;
             int maxHealth = 10;
             int userInput;
-            Console.Write("Введите количество жизней от 1 до 10: ");
+            Console.Write("Введите количество жизней от " + minHealth + " до " + maxHealth + ": ");
             userInput = Convert.ToInt32(Console.ReadLine());
 
-            bar(userInput, maxHealth, ConsoleColor.Red);
+            drawBar(userInput, maxHealth, ConsoleColor.Red);
 
-            static void bar(int value, int maxValue, ConsoleColor color)
+            static void drawBar(int value, int maxValue, ConsoleColor color)
             {
                 ConsoleColor defaultColor = Console.BackgroundColor;
                 string bar = "";
