@@ -21,7 +21,7 @@ namespace lesson
                 {
                     case "1":
                         {
-                            name = AddArray(name, "ФИО"); job = AddArray(job, "должность");
+                            AddArray(ref name,ref job);
                             break;
                         }
                     case "2":
@@ -31,7 +31,7 @@ namespace lesson
                         }
                     case "3":
                         {
-                            deleteCase(ref name, ref job);
+                            DeleteCase(ref name, ref job);
                             break;
                         }
                     case "4":
@@ -48,7 +48,13 @@ namespace lesson
             }
         }
 
-        static void deleteCase(ref string[] name, ref string[] job)
+        static void AddArray(ref string[] name, ref string[] job)
+        {
+            name = AddArray(name, "ФИО");
+            job = AddArray(job, "должность");
+        }
+
+        static void DeleteCase(ref string[] name, ref string[] job)
         {
             Console.Write("\nВведите номер досье, которое хотите удалить: ");
             int deleteElement = Convert.ToInt32(Console.ReadLine());
@@ -108,18 +114,16 @@ namespace lesson
         {
             Console.Write("\nВведите фамилию: ");
             string userInputName = Console.ReadLine();
+            userInputName.ToLower();
 
             for (int i = 0; i < nameArray.Length; i++)
             {
+                nameArray[i].ToLower();
 
                 if (nameArray[i].Contains(userInputName) == true)
                 {
                     Console.WriteLine($"\n{i + 1}. {nameArray[i]} - {jobArray[i]}");
-                }
-                else
-                {
-                    continue;
-                }
+                }              
             }
         }
     }
