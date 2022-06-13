@@ -6,10 +6,10 @@ namespace lesson
     {
         static void Main(string[] args)
         {
-            int output = GetParse();
+            int output = ParsingInput();
         }
 
-        static int GetParse()
+        static int ParsingInput()
         {
             Console.Write("Введите что хотите сконвертировать: ");
             string input = Console.ReadLine();
