@@ -6,15 +6,13 @@ namespace lesson
     {
         static void Main(string[] args)
         {
-            string userInput = "";
-
-            GetParse(userInput);
+            int output = GetParse();
         }
 
-        static int GetParse(string input)
+        static int GetParse()
         {
             Console.Write("Введите что хотите сконвертировать: ");
-            input = Console.ReadLine();
+            string input = Console.ReadLine();
             bool result = int.TryParse(input, out int output);
 
             while (result == false)
@@ -23,6 +21,7 @@ namespace lesson
                 input = Console.ReadLine();
                 result = int.TryParse(input, out output);
             }
+
             Console.Write("Ввод отконвертирован");
             return output;
         }
