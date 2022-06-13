@@ -7,23 +7,21 @@ namespace lesson
         static void Main(string[] args)
         {
             string userInput = "";
-            int output = 0;
-            bool resultParsing = false;
 
-            Parsing(userInput, output, resultParsing);
+            GetParse(userInput);
         }
 
-        static int Parsing(string input, int output, bool result)
+        static int GetParse(string input)
         {
             Console.Write("Введите что хотите сконвертировать: ");
             input = Console.ReadLine();
-            result = int.TryParse(input, out output);
+            bool result = int.TryParse(input, out int output);
 
             while (result == false)
-            {                            
+            {
                 Console.Write("Конвертация не удалась, попробуйте еще раз: ");
-                input = Console.ReadLine();  
-                result = int.TryParse(input, out output);         
+                input = Console.ReadLine();
+                result = int.TryParse(input, out output);
             }
             Console.Write("Ввод отконвертирован");
             return output;
