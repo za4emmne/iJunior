@@ -39,7 +39,7 @@ namespace homework
                         Play(map, ref playerPositionX, ref playerPositionY, ref playerDirectionX, ref playerDirectionY, ref playerSkin, allPoint, ref casePoint, ref level, ref timer, ref userInputLevel);
                         break;
                     case 2:
-                        Draw(mapName, map, out playerPositionX, out playerPositionY, playerSkin, allPoint, casePoint, playerDirectionX, playerDirectionY, level);
+                        PlayerDrawMap(mapName, map, out playerPositionX, out playerPositionY, playerSkin, allPoint, casePoint, playerDirectionX, playerDirectionY, level);
                         break;
                     case 3:
                         ChooseMap(userInputMap, mapName);
@@ -150,25 +150,25 @@ namespace homework
             Console.ReadKey();
         }
 
-        static void ChangePosition(ConsoleKeyInfo key, ref int dX, ref int dY)
+        static void ChangePosition(ConsoleKeyInfo key, ref int directionX, ref int directionY)
         {
             switch (key.Key)
             {
                 case ConsoleKey.UpArrow:
-                    dX = -1; 
-                    dY = 0;
+                    directionX = -1;
+                    directionY = 0;
                     break;
                 case ConsoleKey.DownArrow:
-                    dX = 1; 
-                    dY = 0;
+                    directionX = 1;
+                    directionY = 0;
                     break;
                 case ConsoleKey.LeftArrow:
-                    dX = 0; 
-                    dY = -1;
+                    directionX = 0;
+                    directionY = -1;
                     break;
                 case ConsoleKey.RightArrow:
-                    dX = 0; 
-                    dY = 1;
+                    directionX = 0;
+                    directionY = 1;
                     break;
             }
         }
@@ -186,12 +186,12 @@ namespace homework
             }
         }
 
-        static char[,] ReadMap(ref string mapName, out int playerX, out int playerY, char skin, ref int allPoint)
+        static char[,] ReadMap(ref string mapName, out int playerPositionX, out int playerPositionY, char skin, ref int allPoint)
         {
             string[] newFile = File.ReadAllLines($"maps/{mapName}.txt");
             char[,] map = new char[newFile.Length, newFile[0].Length];
-            playerX = 0;
-            playerY = 0;
+            playerPositionX = 0;
+            playerPositionY = 0;
 
             for (int i = 0; i < map.GetLength(0); i++)
             {
@@ -207,8 +207,8 @@ namespace homework
 
                     if (map[i, j] == skin)
                     {
-                        playerX = i;
-                        playerY = j;
+                        playerPositionX = i;
+                        playerPositionY = j;
                     }
 
                     else if (map[i, j] == ' ')
@@ -235,7 +235,7 @@ namespace homework
             }
         }
 
-        static void Draw(string mapName, char [,] map, out int playerPositionX, out int playerPositionY, char playerSkin, int allPoint, int casePoint, int playerDirectionX, int playerDirectionY, int level)
+        static void PlayerDrawMap(string mapName, char[,] map, out int playerPositionX, out int playerPositionY, char playerSkin, int allPoint, int casePoint, int playerDirectionX, int playerDirectionY, int level)
         {
             Console.Clear();
             bool isDrawMap = true;
@@ -283,4 +283,3 @@ namespace homework
         }
     }
 }
-
