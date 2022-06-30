@@ -19,6 +19,7 @@ namespace homework
             {
                 Console.WriteLine("Выберите действие: \n1. Поиск из словаря\n2. Добавить слово в словарь\n3. Выход");
                 int chooseMenu = Convert.ToInt32(Console.ReadLine());
+
                 switch (chooseMenu)
                 {
                     case 1:
@@ -38,29 +39,33 @@ namespace homework
         {
             Console.Write("Ввндите слово: ");
             string newWord = Console.ReadLine();
+
+            foreach (var word in wordBook)
+            {
+
+                while (newWord == word.Key)
+                {
+                    Console.Write("Такое слово уже есть в словаре, введите другое: ");
+                    newWord = Console.ReadLine();
+                }
+            }
             Console.Write("Введите значение слова: ");
             string wordValue = Console.ReadLine();
             wordBook.Add(newWord, wordValue);
             Console.Write("Слово добавлено, нажмите любую клавишу");
             Console.ReadKey();
             Console.Clear();
+
         }
 
         static void FindWord(string input, Dictionary<string, string> wordBook)
         {
             Console.Write("Чтобы получить значение, введите слово из словаря: ");
             input = Console.ReadLine();
-            
+
             if (wordBook.ContainsKey(input))
             {
-                foreach (var word in wordBook)
-                {
-
-                    if (input == word.Key)
-                    {
-                        Console.WriteLine($"{word.Key} - {word.Value}");
-                    }
-                }
+                Console.WriteLine($"{input} - {wordBook[input]}");
             }
             else
             {
