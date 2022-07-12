@@ -28,13 +28,13 @@ namespace homework
                         isExit = true;
                         break;
                     default:
-                        Parse(userInput, numbers);
+                        AddNumber(userInput, numbers);
                         break;
                 }
             }
         }
 
-        static void Parse(string userInput, List<int> numbers)
+        static void AddNumber(string userInput, List<int> numbers)
         {
             int outputNumber;
             int.TryParse(userInput, out outputNumber);
