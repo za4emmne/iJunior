@@ -22,30 +22,28 @@ namespace homework
                 switch (userInput)
                 {
                     case "sum":
-                        Sum(numbers);
+                        ShowSum(numbers);
                         break;
                     case "exit":
                         isExit = true;
                         break;
                     default:
-                        Parser(userInput, numbers);
+                        Parse(userInput, numbers);
                         break;
                 }
             }
         }
 
-        static void Parser(string userInput, List<int> numbers)
+        static void Parse(string userInput, List<int> numbers)
         {
             int outputNumber;
             int.TryParse(userInput, out outputNumber);
             numbers.Add(outputNumber);
         }
 
-        static void Sum(List<int> numbers)
+        static void ShowSum(List<int> numbers)
         {
-            int sum = 0;
-            Console.WriteLine($"Сумма чисел равна - {sum = numbers.Sum()}");
-            sum = 0;
+            Console.WriteLine($"Сумма чисел равна - {numbers.Sum()}");
         }
     }
 }
