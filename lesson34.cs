@@ -37,17 +37,13 @@ namespace homework
 
         static void AddWord(ref Dictionary<string, string> wordBook)
         {
-            Console.Write("Ввндите слово: ");
+            Console.Write("Введите слово: ");
             string newWord = Console.ReadLine();
 
-            foreach (var word in wordBook)
+            while (wordBook.ContainsKey(newWord) == true)
             {
-
-                while (newWord == word.Key)
-                {
-                    Console.Write("Такое слово уже есть в словаре, введите другое: ");
-                    newWord = Console.ReadLine();
-                }
+                Console.Write("Такое слово уже есть в словаре, введите другое: ");
+                newWord = Console.ReadLine();
             }
             Console.Write("Введите значение слова: ");
             string wordValue = Console.ReadLine();
@@ -55,7 +51,6 @@ namespace homework
             Console.Write("Слово добавлено, нажмите любую клавишу");
             Console.ReadKey();
             Console.Clear();
-
         }
 
         static void FindWord(string input, Dictionary<string, string> wordBook)
