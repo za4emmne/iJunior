@@ -25,25 +25,17 @@ namespace lesson
                 switch (userInput)
                 {
                     case "1":
-                        {
                             AddWorker(worker);
                             break;
-                        }
                     case "2":
-                        {
                             DrawLibrary(worker);
                             break;
-                        }
                     case "3":
-                        {
                             DeleteWorker(worker);
                             break;
-                        }
                     case "4":
-                        {
                             isExit = true;
                             break;
-                        }
                 }
             }
         }
@@ -63,8 +55,15 @@ namespace lesson
         {
             Console.Write("Введите фамилию, имя и отчество сотрудника: ");
             string userInputName = Console.ReadLine();
+
+            while (workers.ContainsKey(userInputName) == true)
+            {
+                Console.Write("Этот сотрудник уже есть в списке,введите другие данные: ");
+                userInputName = Console.ReadLine();
+            }
             Console.Write("Введите должность сотрудника: ");
             string userInputJob = Console.ReadLine();
+            
             workers.Add(userInputName, userInputJob);
             Console.Clear();
         }
