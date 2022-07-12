@@ -13,7 +13,6 @@ namespace homework
             string userInput = "";
             List<int> numbers = new List<int>();
             bool isExit = false;
-            int sum = 0;
 
             while (isExit == false)
             {
@@ -23,16 +22,30 @@ namespace homework
                 switch (userInput)
                 {
                     case "sum":
-                        Console.WriteLine($"Сумма чисел равна - {sum = numbers.Sum()}");
+                        Sum(numbers);
                         break;
                     case "exit":
                         isExit = true;
                         break;
                     default:
-                        numbers.Add(Convert.ToInt32(userInput));
+                        Parser(userInput, numbers);
                         break;
                 }
             }
+        }
+
+        static void Parser(string userInput, List<int> numbers)
+        {
+            int outputNumber;
+            int.TryParse(userInput, out outputNumber);
+            numbers.Add(outputNumber);
+        }
+
+        static void Sum(List<int> numbers)
+        {
+            int sum = 0;
+            Console.WriteLine($"Сумма чисел равна - {sum = numbers.Sum()}");
+            sum = 0;
         }
     }
 }
