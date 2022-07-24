@@ -11,17 +11,17 @@ namespace lesson
         static void Main(string[] args)
         {
             Player player = new Player("Eric", 100, 50);
-            player.TakeSkill();
+            player.ShowInfoPlayer();
         }
     }
 
     class Player
     {
-        public string Name;
-        public int Health;
-        public int Damage;
+        string Name;
+        int Health;
+        int Damage;
 
-        public void TakeSkill()
+        public void ShowInfoPlayer()
         {
             Console.WriteLine($"Имя игрока: {Name}, здоровье: {Health}, атака: {Damage}");
         }
