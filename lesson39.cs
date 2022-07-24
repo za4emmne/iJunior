@@ -11,26 +11,26 @@ namespace lesson
         static void Main(string[] args)
         {
             Player player = new Player("Eric", 100, 50);
-            player.ShowInfoPlayer();
+            player.ShowInfo();
         }
     }
 
     class Player
     {
-        string Name;
-        int Health;
-        int Damage;
+        private string _name;
+        private int _health;
+        private int _damage;
 
-        public void ShowInfoPlayer()
+        public void ShowInfo()
         {
-            Console.WriteLine($"Имя игрока: {Name}, здоровье: {Health}, атака: {Damage}");
+            Console.WriteLine($"Имя игрока: {_name}, здоровье: {_health}, атака: {_damage}");
         }
 
         public Player(string name, int health, int damage)
         {
-            Name = name;
-            Health = health;
-            Damage = damage;
+            _name = name;
+            _health = health;
+            _damage = damage;
         }
     }
 }
