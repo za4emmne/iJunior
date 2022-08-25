@@ -17,7 +17,7 @@ namespace lesson
 
     class Database
     {
-        private Player Player;
+        private Player _player;
         private List<Player> Players = new List<Player>();
 
         public Database()
@@ -46,7 +46,7 @@ namespace lesson
                 switch (choosePlayer)
                 {
                     case ShowAllPlayers:
-                        ShowDataBase();
+                        ShowBase();
                         break;
                     case AddPlayers:
                         AddPlayer();
@@ -73,7 +73,7 @@ namespace lesson
         public void AddPlayer()
         {
             string baseLevel = "Junior";
-            bool baseFlag = false;
+            bool isPlayerBanned = false;
             Console.Write("\nЧто бы добавить игрока введите его ID: ");
             int inputPlayerId = Convert.ToInt32(Console.ReadLine());
 
@@ -87,18 +87,18 @@ namespace lesson
             }
             Console.Write("\nВведите имя игрока: ");
             string inputPlayerName = Console.ReadLine();
-            Players.Add(new Player(inputPlayerName, inputPlayerId, baseLevel, baseFlag));
+            Players.Add(new Player(inputPlayerName, inputPlayerId, baseLevel, isPlayerBanned));
             Console.Clear();
         }
 
         public void BanPlayer()
         {
             Console.Write("\nВведите ID игрока, которого необходимо забанить: ");
-            bool banTrigger = TryGetPlayer(out Player);
+            bool banTrigger = TryGetPlayer(out _player);
 
-            if (banTrigger && Player.IsBanned == false)
+            if (banTrigger && _player.IsBanned == false)
             {
-                Player.IsBanned = true;
+                _player.IsBanned = true;
                 Console.WriteLine("Игрок забанен");
             }
             else
@@ -121,11 +121,11 @@ namespace lesson
                 }
             }
             Console.Write("\nВведите Id игрока, которого необходимо разбанить: ");
-            bool unbanTrigger = TryGetPlayer(out Player);
+            bool unbanTrigger = TryGetPlayer(out _player);
 
-            if (unbanTrigger && Player.IsBanned)
+            if (unbanTrigger && _player.IsBanned)
             {
-                Player.IsBanned = false;
+                _player.IsBanned = false;
                 Console.WriteLine("Игрок разбанен");
             }
             else
@@ -139,11 +139,11 @@ namespace lesson
         public void DeletePlayer()
         {
             Console.Write("\nВведите Id игрока, которого необходимо удалить: ");
-            bool deleteTrigger = TryGetPlayer(out Player);
+            bool deleteTrigger = TryGetPlayer(out _player);
 
             if (deleteTrigger)
             {
-                Players.Remove(Player);
+                Players.Remove(_player);
                 Console.WriteLine("Игрок удален");
             }
             else
@@ -171,7 +171,7 @@ namespace lesson
             return isFindPlayer = false;
         }
 
-        public void ShowDataBase()
+        public void ShowBase()
         {
             Console.WriteLine("\nБаза данных игроков:");
 
