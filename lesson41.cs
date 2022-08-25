@@ -11,14 +11,14 @@ namespace lesson
         static void Main(string[] args)
         {
             Database database = new Database();
-            List<Player> players = database.Players;
-            database.Menu();
+            database.ShowMenu();
         }
     }
 
     class Database
     {
-        public List<Player> Players { get; set; } = new List<Player>();
+        private Player Player;
+        private List<Player> Players = new List<Player>();
 
         public Database()
         {
@@ -26,35 +26,41 @@ namespace lesson
             Players.Add(new Player("Keck", 2, "middle", false));
         }
 
-        public void Menu()
+        public void ShowMenu()
         {
+            const string CommandExit = "exit";
+            const string ShowAllPlayers = "show";
+            const string AddPlayers = "add";
+            const string DeletePlayers = "del";
+            const string BannedPlayers = "ban";
+            const string UnBannedPlayers = "unban";
             bool isWork = true;
 
             while (isWork)
             {
-                Console.WriteLine("Выберите пункт меню:\n1. Вывести список всех игроков\n2. Добавить игрока\n3. Забанить игрока\n4. Разбанить игрока" +
-                    "\n5. Удалить игрока\n6. Выход");
+                Console.WriteLine("Выберите пункт меню:\n1. Вывести список всех игроков - show\n2. Добавить игрока             - add\n3. Забанить игрока           " +
+                "  - ban\n" + "4. Разбанить игрока            - unban" + "\n5. Удалить игрока              - del\n6. Выход                       - exit");
                 Console.Write("\nВаш ввод: ");
                 string choosePlayer = Console.ReadLine();
 
                 switch (choosePlayer)
                 {
-                    case "1":
+                    case ShowAllPlayers:
                         ShowDataBase();
                         break;
-                    case "2":
+                    case AddPlayers:
                         AddPlayer();
                         break;
-                    case "3":
+                    case BannedPlayers:
                         BanPlayer();
                         break;
-                    case "4":
+                    case UnBannedPlayers:
                         UnBanPlayer();
                         break;
-                    case "5":
+                    case DeletePlayers:
                         DeletePlayer();
                         break;
-                    case "6":
+                    case CommandExit:
                         isWork = false;
                         break;
                     default:
@@ -67,7 +73,7 @@ namespace lesson
         public void AddPlayer()
         {
             string baseLevel = "Junior";
-            bool baseFlag = true;
+            bool baseFlag = false;
             Console.Write("\nЧто бы добавить игрока введите его ID: ");
             int inputPlayerId = Convert.ToInt32(Console.ReadLine());
 
@@ -87,21 +93,15 @@ namespace lesson
 
         public void BanPlayer()
         {
-            bool banTrigger = true;
             Console.Write("\nВведите ID игрока, которого необходимо забанить: ");
-            int inputPlayerId = Convert.ToInt32(Console.ReadLine());
+            bool banTrigger = TryGetPlayer(out Player);
 
-            foreach (var player in Players)
+            if (banTrigger && Player.IsBanned == false)
             {
-                if (player.Id == inputPlayerId && player.Flag)
-                {
-                    player.Flag = false;
-                    banTrigger = false;
-                    Console.WriteLine("Игрок забанен");
-                }
+                Player.IsBanned = true;
+                Console.WriteLine("Игрок забанен");
             }
-
-            if (banTrigger)
+            else
             {
                 Console.WriteLine("Ошибка, проверьте вводимые данные");
             }
@@ -111,30 +111,24 @@ namespace lesson
 
         public void UnBanPlayer()
         {
-            bool banTrigger = true;
             Console.WriteLine("\nСписок забаненых игроков: ");
 
             foreach (var player in Players)
             {
-                if (player.Flag == false)
+                if (player.IsBanned == true)
                 {
                     player.ShowInfo();
                 }
             }
             Console.Write("\nВведите Id игрока, которого необходимо разбанить: ");
-            int inputPlayerId = Convert.ToInt32(Console.ReadLine());
+            bool unbanTrigger = TryGetPlayer(out Player);
 
-            foreach (var player in Players)
+            if (unbanTrigger && Player.IsBanned)
             {
-                if (player.Id == inputPlayerId && player.Flag == false)
-                {
-                    player.Flag = true;
-                    banTrigger = false;
-                    Console.WriteLine("Игрок разбанен");
-                }
+                Player.IsBanned = false;
+                Console.WriteLine("Игрок разбанен");
             }
-
-            if (banTrigger)
+            else
             {
                 Console.WriteLine("Ошибка, проверьте вводимые данные");
             }
@@ -144,24 +138,15 @@ namespace lesson
 
         public void DeletePlayer()
         {
-            bool deleteTrigger = false;
             Console.Write("\nВведите Id игрока, которого необходимо удалить: ");
-            int inputPlayerId = Convert.ToInt32(Console.ReadLine());
-
-            foreach (var player in Players)
-            {
-                if (player.Id == inputPlayerId)
-                {
-                    deleteTrigger = true;
-                }
-            }
+            bool deleteTrigger = TryGetPlayer(out Player);
 
             if (deleteTrigger)
             {
-                Players.RemoveAt(FindIndexPlayer(inputPlayerId));
+                Players.Remove(Player);
                 Console.WriteLine("Игрок удален");
             }
-           else
+            else
             {
                 Console.WriteLine("Ошибка, проверьте вводимые данные");
             }
@@ -169,19 +154,23 @@ namespace lesson
             Console.Clear();
         }
 
-        public int FindIndexPlayer(int inputId)
+        private bool TryGetPlayer(out Player gamer)
         {
-            int findIndex = -1;
+            bool isFindPlayer = true;
+            gamer = null;
+            int inputPlayerId = Convert.ToInt32(Console.ReadLine());
 
             foreach (var player in Players)
             {
-                if (inputId == player.Id)
+                if (inputPlayerId == player.Id)
                 {
-                    findIndex = Players.IndexOf(player);
+                    gamer = player;
+                    return isFindPlayer;
                 }
             }
-            return findIndex;
+            return isFindPlayer = false;
         }
+
         public void ShowDataBase()
         {
             Console.WriteLine("\nБаза данных игроков:");
@@ -197,30 +186,30 @@ namespace lesson
 
     class Player
     {
-        public string Name { get; set; }
-        public int Id { get; set; }
-        public string Level { get; set; }
-        public bool Flag { get; set; }
+        public string Name { get; private set; }
+        public int Id { get; private set; }
+        public string Level { get; private set; }
+        public bool IsBanned { get; set; }
 
-        public Player(string name, int id, string level, bool flag)
+        public Player(string name, int id, string level, bool isBanned)
         {
             Name = name;
             Id = id;
             Level = level;
-            Flag = flag;
+            IsBanned = isBanned;
         }
 
         public void ShowInfo()
         {
             string flag;
 
-            if (Flag)
+            if (IsBanned)
             {
-                flag = "активен";
+                flag = "забанен";
             }
             else
             {
-                flag = "забанен";
+                flag = "активен";
             }
             Console.WriteLine("ID: " + Id + ". Имя игрока: [" + Name + "] уровень: [" + Level + "] статус: " + flag);
         }
