@@ -46,10 +46,10 @@ namespace lesson
                 switch (choosePlayer)
                 {
                     case ShowAllPlayers:
-                        ShowBase();
+                        ShowPlayers();
                         break;
                     case AddPlayers:
-                        AddPlayer();
+                        AddAndCheckPlayer();
                         break;
                     case BannedPlayers:
                         BanPlayer();
@@ -70,7 +70,7 @@ namespace lesson
             }
         }
 
-        public void AddPlayer()
+        public void AddAndCheckPlayer()
         {
             string baseLevel = "Junior";
             bool isPlayerBanned = false;
@@ -111,7 +111,7 @@ namespace lesson
             Console.Clear();
         }
 
-        public void UnBanPlayer()
+        public void ShowBannedPlayers()
         {
             Console.WriteLine("\nСписок забаненых игроков: ");
 
@@ -122,6 +122,11 @@ namespace lesson
                     player.ShowInfo();
                 }
             }
+        }
+
+        public void UnBanPlayer()
+        {
+            ShowBannedPlayers();
             Console.Write("\nВведите Id игрока, которого необходимо разбанить: ");
             bool unbanTrigger = TryGetPlayer(out _player);
 
@@ -141,9 +146,9 @@ namespace lesson
         public void DeletePlayer()
         {
             Console.Write("\nВведите Id игрока, которого необходимо удалить: ");
-            bool deleteTrigger = TryGetPlayer(out _player);
+            bool isCompleatBanned = TryGetPlayer(out _player);
 
-            if (deleteTrigger)
+            if (isCompleatBanned)
             {
                 _players.Remove(_player);
                 Console.WriteLine("Игрок удален");
@@ -182,7 +187,7 @@ namespace lesson
             }
         }
 
-        public void ShowBase()
+        public void ShowPlayers()
         {
             Console.WriteLine("\nБаза данных игроков:");
 
