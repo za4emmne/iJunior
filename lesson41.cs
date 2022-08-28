@@ -17,7 +17,6 @@ namespace lesson
 
     class Database
     {
-        private Player _player;
         private List<Player> _players = new List<Player>();
 
         public Database()
@@ -32,7 +31,7 @@ namespace lesson
             const string ShowAllPlayers = "show";
             const string AddPlayers = "add";
             const string DeletePlayers = "del";
-            const string BannedPlayers = "ban";
+            const string BanPlayerCommand = "ban";
             const string UnBannedPlayers = "unban";
             bool isWork = true;
 
@@ -41,17 +40,17 @@ namespace lesson
                 Console.WriteLine("Выберите пункт меню:\n1. Вывести список всех игроков - show\n2. Добавить игрока             - add\n3. Забанить игрока           " +
                 "  - ban\n" + "4. Разбанить игрока            - unban" + "\n5. Удалить игрока              - del\n6. Выход                       - exit");
                 Console.Write("\nВаш ввод: ");
-                string choosePlayer = Console.ReadLine();
+                string chooseCommand = Console.ReadLine();
 
-                switch (choosePlayer)
+                switch (chooseCommand)
                 {
                     case ShowAllPlayers:
                         ShowPlayers();
                         break;
                     case AddPlayers:
-                        AddAndCheckPlayer();
+                        AddPlayer();
                         break;
-                    case BannedPlayers:
+                    case BanPlayerCommand:
                         BanPlayer();
                         break;
                     case UnBannedPlayers:
@@ -70,35 +69,43 @@ namespace lesson
             }
         }
 
-        public void AddAndCheckPlayer()
+        public void AddPlayer()
         {
             string baseLevel = "Junior";
             bool isPlayerBanned = false;
             Console.Write("\nЧто бы добавить игрока введите его ID: ");
             bool isFindPlayerId = true;
-            isFindPlayerId = TryGetPlayer(out _player);
+            isFindPlayerId = TryGetPlayer(out Player _player);
 
-            if (isFindPlayerId)
+            while (CheckPlayer(isFindPlayerId))
             {
-                Console.WriteLine("Такой Id уже существувет, укажите другой!\n");
-                Console.ReadKey();
-                Console.Clear();
+                isFindPlayerId = TryGetPlayer(out _player);
+            }
+            Console.Write("\nВведите имя игрока: ");
+            string inputPlayerName = Console.ReadLine();
+            _players.Add(new Player(inputPlayerName, _player.Id, baseLevel, isPlayerBanned));
+            Console.Clear();
+        }
+
+        public bool CheckPlayer(bool isPlayerRepeat)
+        {
+            if (isPlayerRepeat)
+            {
+                Console.Write("Такой Id уже существувет, укажите другой: ");
+                return true;
             }
             else
             {
-                Console.Write("\nВведите имя игрока: ");
-                string inputPlayerName = Console.ReadLine();
-                _players.Add(new Player(inputPlayerName, _player.Id, baseLevel, isPlayerBanned));
-                Console.Clear();
+                return false;
             }
         }
 
         public void BanPlayer()
         {
             Console.Write("\nВведите ID игрока, которого необходимо забанить: ");
-            bool banTrigger = TryGetPlayer(out _player);
+            bool isPlayerBan = TryGetPlayer(out Player _player);
 
-            if (banTrigger && _player.IsBanned == false)
+            if (isPlayerBan && _player.IsBanned == false)
             {
                 _player.Ban();
                 Console.WriteLine("Игрок забанен");
@@ -128,9 +135,9 @@ namespace lesson
         {
             ShowBannedPlayers();
             Console.Write("\nВведите Id игрока, которого необходимо разбанить: ");
-            bool unbanTrigger = TryGetPlayer(out _player);
+            bool isPlayerUnban = TryGetPlayer(out Player _player);
 
-            if (unbanTrigger && _player.IsBanned)
+            if (isPlayerUnban && _player.IsBanned)
             {
                 _player.Unban();
                 Console.WriteLine("Игрок разбанен");
@@ -146,7 +153,7 @@ namespace lesson
         public void DeletePlayer()
         {
             Console.Write("\nВведите Id игрока, которого необходимо удалить: ");
-            bool isCompleatBanned = TryGetPlayer(out _player);
+            bool isCompleatBanned = TryGetPlayer(out Player _player);
 
             if (isCompleatBanned)
             {
