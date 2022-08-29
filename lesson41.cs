@@ -69,7 +69,7 @@ namespace lesson
             }
         }
 
-        public void AddPlayer()
+        public void EnterNewPlayer(out Player player)
         {
             string baseLevel = "Junior";
             bool isPlayerBanned = false;
@@ -83,7 +83,14 @@ namespace lesson
             }
             Console.Write("\nВведите имя игрока: ");
             string inputPlayerName = Console.ReadLine();
-            _players.Add(new Player(inputPlayerName, _player.Id, baseLevel, isPlayerBanned));
+            player = new Player (inputPlayerName, _player.Id, baseLevel, isPlayerBanned);
+            return;
+        }
+
+        public void AddPlayer()
+        {
+            EnterNewPlayer(out Player player);
+            _players.Add(player);
             Console.Clear();
         }
 
