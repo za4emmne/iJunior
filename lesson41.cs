@@ -74,16 +74,15 @@ namespace lesson
             string baseLevel = "Junior";
             bool isPlayerBanned = false;
             Console.Write("\nЧто бы добавить игрока введите его ID: ");
-            bool isFindPlayerId = true;
-            isFindPlayerId = TryGetPlayer(out Player _player);
+            bool isFindPlayerId = TryGetPlayer(out Player _player, out int PlayerId);
 
             while (CheckPlayer(isFindPlayerId))
             {
-                isFindPlayerId = TryGetPlayer(out _player);
+                isFindPlayerId = TryGetPlayer(out _player, out PlayerId);
             }
             Console.Write("\nВведите имя игрока: ");
             string inputPlayerName = Console.ReadLine();
-            player = new Player (inputPlayerName, _player.Id, baseLevel, isPlayerBanned);
+            player = new Player(inputPlayerName, PlayerId, baseLevel, isPlayerBanned);
             return;
         }
 
@@ -110,7 +109,7 @@ namespace lesson
         public void BanPlayer()
         {
             Console.Write("\nВведите ID игрока, которого необходимо забанить: ");
-            bool isPlayerBan = TryGetPlayer(out Player _player);
+            bool isPlayerBan = TryGetPlayer(out Player _player, out int outputPlayerId);
 
             if (isPlayerBan && _player.IsBanned == false)
             {
@@ -142,7 +141,7 @@ namespace lesson
         {
             ShowBannedPlayers();
             Console.Write("\nВведите Id игрока, которого необходимо разбанить: ");
-            bool isPlayerUnban = TryGetPlayer(out Player _player);
+            bool isPlayerUnban = TryGetPlayer(out Player _player, out int outputPlayerId);
 
             if (isPlayerUnban && _player.IsBanned)
             {
@@ -160,7 +159,7 @@ namespace lesson
         public void DeletePlayer()
         {
             Console.Write("\nВведите Id игрока, которого необходимо удалить: ");
-            bool isCompleatBanned = TryGetPlayer(out Player _player);
+            bool isCompleatBanned = TryGetPlayer(out Player _player, out int outputPlayerId);
 
             if (isCompleatBanned)
             {
@@ -175,13 +174,13 @@ namespace lesson
             Console.Clear();
         }
 
-        private bool TryGetPlayer(out Player gamer)
+        private bool TryGetPlayer(out Player gamer, out int outputPlayerId)
         {
+            gamer = null;
             bool isNumber = true;
             bool isFindPlayer = true;
-            gamer = null;
             string inputPlayerId = Console.ReadLine();
-            int.TryParse(inputPlayerId, out int outputPlayerId);
+            int.TryParse(inputPlayerId, out outputPlayerId);
 
             if (isNumber)
             {
