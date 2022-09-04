@@ -12,6 +12,14 @@ namespace lesson
         {
             Player player = new Player();
             Deck deck = new Deck();
+            Casino casino = new Casino(player, deck);
+        }
+    }
+
+    class Casino
+    {
+        public Casino(Player player, Deck deck)
+        {
             bool isGame = true;
 
             while (isGame)
@@ -21,23 +29,28 @@ namespace lesson
                 Console.WriteLine("\nЧтобы начать играть и вытянуть карту нажмите: 1\nЧтобы получить определенное количество карт: 2\nЧтобы посмотреть свои карты: 3\nЧтобы сбросить" +
                     " карты: 4\nЧтобы выйти - ext");
                 Console.Write("\nВаша команда: ");
+                const string CommnadTakeCard = "1";
+                const string CommandTakeCountCard = "2";
+                const string CommandShowHand = "3";
+                const string CommandClearHand = "4";
+                const string CommandExit = "ext";
                 string inputPlayer = Console.ReadLine();
 
                 switch (inputPlayer)
                 {
-                    case "1":
-                        player.TakeCard(deck);
+                    case CommnadTakeCard:
+                        player.TakeCardHand(deck);
                         break;
-                    case "2":
-                        player.TakeCountCard(deck);
+                    case CommandTakeCountCard:
+                        player.TakeCoundCardHand(deck);
                         break;
-                    case "3":
+                    case CommandShowHand:
                         player.ShowPlayerCards();
                         break;
-                    case "4":
+                    case CommandClearHand:
                         player.ClearPlayerCard();
                         break;
-                    case "ext":
+                    case CommandExit:
                         isGame = false;
                         break;
                     default:
@@ -69,14 +82,14 @@ namespace lesson
     {
         private List<Card> _playerCards = new List<Card>();
 
-        public void TakeCard(Deck deck)
+        public void TakeCardHand(Deck deck)
         {
             deck.FindCard(out Card card);
             _playerCards.Add(card);
             Console.Clear();
         }
 
-        public void TakeCountCard(Deck deck)
+        public void TakeCoundCardHand(Deck deck)
         {
             Console.Write("Введите сколько карт вы хотите взять: ");
             string inputCountCard = Console.ReadLine();
@@ -84,7 +97,7 @@ namespace lesson
 
             for (int i = 0; i < countCard; i++)
             {
-                TakeCard(deck);
+                TakeCardHand(deck);
             }
         }
 
@@ -117,6 +130,7 @@ namespace lesson
                 {
                     card.ShowCard();
                 }
+                
                 Console.ReadKey();
                 Console.Clear();
             }
@@ -131,8 +145,9 @@ namespace lesson
 
     class Deck
     {
-        Random random = new Random();
+        private Random _random = new Random();
         private List<Card> _deck = new List<Card>();
+
         public Deck()
         {
             FormDeck();
@@ -155,12 +170,13 @@ namespace lesson
         public void FindCard(out Card findCard)
         {
             findCard = null;
-            int randomNumber = random.Next(0, _deck.Count);
+            int randomNumber = _random.Next(0, _deck.Count);
 
             foreach (var card in _deck)
             {
                 findCard = _deck.ElementAt(randomNumber);
             }
+
             return;
         }
     }
