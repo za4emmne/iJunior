@@ -12,28 +12,30 @@ namespace lesson
         {
             Player player = new Player();
             Deck deck = new Deck();
-            Casino casino = new Casino(player, deck);
+            Casino casino = new Casino();
+            casino.Menu(player, deck);
         }
     }
 
     class Casino
     {
-        public Casino(Player player, Deck deck)
+        public void Menu(Player player, Deck deck)
         {
             bool isGame = true;
 
             while (isGame)
             {
-                Console.SetCursorPosition(10, 0);
-                Console.WriteLine("Добро пожаловать в POKERDOM");
-                Console.WriteLine("\nЧтобы начать играть и вытянуть карту нажмите: 1\nЧтобы получить определенное количество карт: 2\nЧтобы посмотреть свои карты: 3\nЧтобы сбросить" +
-                    " карты: 4\nЧтобы выйти - ext");
-                Console.Write("\nВаша команда: ");
                 const string CommnadTakeCard = "1";
-                const string CommandTakeCountCard = "2";
+                const string CommandTakeCards = "2";
                 const string CommandShowHand = "3";
                 const string CommandClearHand = "4";
                 const string CommandExit = "ext";
+                Console.SetCursorPosition(10, 0);
+                Console.WriteLine("Добро пожаловать в POKERDOM");
+                Console.WriteLine("\nЧтобы начать играть и вытянуть карту нажмите: " + CommnadTakeCard + "\nЧтобы получить определенное количество карт: " + CommandTakeCards +
+                    "\nЧтобы посмотреть свои карты: " + CommandShowHand + "\nЧтобы сбросить карты: " + CommandClearHand + "\nЧтобы выйти - " + CommandExit);
+                deck.CoundCards();
+                Console.Write("\nВаша команда: ");
                 string inputPlayer = Console.ReadLine();
 
                 switch (inputPlayer)
@@ -41,14 +43,14 @@ namespace lesson
                     case CommnadTakeCard:
                         player.TakeCardHand(deck);
                         break;
-                    case CommandTakeCountCard:
-                        player.TakeCoundCardHand(deck);
+                    case CommandTakeCards:
+                        player.TakeCardsHand(deck);
                         break;
                     case CommandShowHand:
-                        player.ShowPlayerCards();
+                        player.ShowCards();
                         break;
                     case CommandClearHand:
-                        player.ClearPlayerCard();
+                        player.ClearHandCard(deck);
                         break;
                     case CommandExit:
                         isGame = false;
@@ -72,7 +74,7 @@ namespace lesson
             Suit = suit;
         }
 
-        public void ShowCard()
+        public void Show()
         {
             Console.WriteLine(Number + " " + Suit);
         }
@@ -80,16 +82,16 @@ namespace lesson
 
     class Player
     {
-        private List<Card> _playerCards = new List<Card>();
+        private List<Card> _cards = new List<Card>();
 
         public void TakeCardHand(Deck deck)
         {
             deck.FindCard(out Card card);
-            _playerCards.Add(card);
+            _cards.Add(card);
             Console.Clear();
         }
 
-        public void TakeCoundCardHand(Deck deck)
+        public void TakeCardsHand(Deck deck)
         {
             Console.Write("Введите сколько карт вы хотите взять: ");
             string inputCountCard = Console.ReadLine();
@@ -101,14 +103,16 @@ namespace lesson
             }
         }
 
-        public void ClearPlayerCard()
+        public void ClearHandCard(Deck deck)
         {
-            if (_playerCards.Count > 0)
+            if (_cards.Count > 0)
             {
-                for (int i = 0; i < _playerCards.Count; i++)
+                for (int i = 0; i < _cards.Count; i++)
                 {
-                    _playerCards.RemoveAt(i);
+                    _cards.RemoveAt(i);
                 }
+                deck.Clear();
+                deck.FormDeck();
             }
             else
             {
@@ -119,18 +123,17 @@ namespace lesson
             Console.Clear();
         }
 
-        public void ShowPlayerCards()
+        public void ShowCards()
         {
-            if (_playerCards.Count > 0)
+            if (_cards.Count > 0)
             {
                 Console.WriteLine();
                 Console.WriteLine("Ваши карты:");
 
-                foreach (var card in _playerCards)
+                foreach (var card in _cards)
                 {
-                    card.ShowCard();
+                    card.Show();
                 }
-                
                 Console.ReadKey();
                 Console.Clear();
             }
@@ -146,11 +149,22 @@ namespace lesson
     class Deck
     {
         private Random _random = new Random();
-        private List<Card> _deck = new List<Card>();
+        private List<Card> _cards = new List<Card>();
 
         public Deck()
         {
             FormDeck();
+        }
+
+        public void Clear()
+        {
+            while (_cards.Count > 0)
+            {
+                for (int i = 0; i < _cards.Count; i++)
+                {
+                    _cards.RemoveAt(i);
+                }
+            }
         }
 
         public void FormDeck()
@@ -162,22 +176,31 @@ namespace lesson
             {
                 for (int j = 0; j <= 3; j++)
                 {
-                    _deck.Add(new Card(numbers[i], suits[j]));
+                    _cards.Add(new Card(numbers[i], suits[j]));
                 }
             }
         }
 
+        public void CoundCards()
+        {
+            Console.SetCursorPosition(0, 15);
+            Console.WriteLine("В колоде осталось карт: " + _cards.Count);
+        }
+
         public void FindCard(out Card findCard)
         {
-            findCard = null;
-            int randomNumber = _random.Next(0, _deck.Count);
-
-            foreach (var card in _deck)
+            if (_cards.Count > 0)
             {
-                findCard = _deck.ElementAt(randomNumber);
+                int randomNumber = _random.Next(0, _cards.Count);
+                findCard = _cards.ElementAt(randomNumber);
+                _cards.Remove(findCard);
             }
-
-            return;
+            else
+            {
+                Console.WriteLine("\nКолода пуста");
+                Console.ReadKey();
+                findCard = null;
+            }
         }
     }
 }
