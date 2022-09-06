@@ -11,7 +11,47 @@ namespace lesson
         static void Main(string[] args)
         {
             Library library = new Library();
-            library.Menu();
+            bool isExit = false;
+
+            while (isExit == false)
+            {
+                const string CommandShowAllBooks = "1";
+                const string CommandAddBook = "2";
+                const string CommandFindBook = "3";
+                const string CommandRemoveBook = "4";
+                const string CommandExit = "ext";
+                Console.SetCursorPosition(15, 0);
+                Console.WriteLine("Добро пожаловать в БИБЛИОТЕКУ!\n\nЗдесь вы можете:");
+                Console.WriteLine("\nПосмотреть все книги        - НАЖАВ НА " + CommandShowAllBooks);
+                Console.WriteLine("Добавить книгу в библиотеку - НАЖАВ НА " + CommandAddBook);
+                Console.WriteLine("Найти книгу                 - НАЖАВ НА " + CommandFindBook);
+                Console.WriteLine("Убрать книгу                - НАЖАВ НА " + CommandRemoveBook);
+                Console.WriteLine("Выйти                       - ВВЕСТИ " + CommandExit);
+                Console.Write("\n\n\nВыбери команду: ");
+                string inputCommand = Console.ReadLine();
+
+                switch (inputCommand)
+                {
+                    case CommandShowAllBooks:
+                        library.ShowAllBooks();
+                        break;
+                    case CommandAddBook:
+                        library.AddBook();
+                        break;
+                    case CommandFindBook:
+                        library.FindBook();
+                        break;
+                    case CommandRemoveBook:
+                        library.RemoveBook();
+                        break;
+                    case CommandExit:
+                        isExit = true;
+                        break;
+                    default:
+                        Console.WriteLine("\nТакой команды нет");
+                        break;
+                }
+            }
         }
     }
 
@@ -45,51 +85,6 @@ namespace lesson
             _books.Add(new Book("Капитал", "Карл Маркс", 1867, "Финансы"));
         }
 
-        public void Menu()
-        {
-            bool isExit = false;
-
-            while (isExit == false)
-            {
-                const string CommandShowAllBooks = "1";
-                const string CommandAddBook = "2";
-                const string CommandFindBook = "3";
-                const string CommandRemoveBook = "4";
-                const string CommandExit = "ext";
-                Console.SetCursorPosition(15, 0);
-                Console.WriteLine("Добро пожаловать в БИБЛИОТЕКУ!\n\nЗдесь вы можете:");
-                Console.WriteLine("\nПосмотреть все книги        - НАЖАВ НА " + CommandShowAllBooks);
-                Console.WriteLine("Добавить книгу в библиотеку - НАЖАВ НА " + CommandAddBook);
-                Console.WriteLine("Найти книгу                 - НАЖАВ НА " + CommandFindBook);
-                Console.WriteLine("Убрать книгу                - НАЖАВ НА " + CommandRemoveBook);
-                Console.WriteLine("Выйти                       - ВВЕСТИ " + CommandExit);
-                Console.Write("\n\n\nВыбери команду: ");
-                string inputCommand = Console.ReadLine();
-
-                switch (inputCommand)
-                {
-                    case CommandShowAllBooks:
-                        ShowAllBooks();
-                        break;
-                    case CommandAddBook:
-                        AddBook();
-                        break;
-                    case CommandFindBook:
-                        FindBook();
-                        break;
-                    case CommandRemoveBook:
-                        RemoveBook();
-                        break;
-                    case CommandExit:
-                        isExit = true;
-                        break;
-                    default:
-                        Console.WriteLine("\nТакой команды нет");
-                        break;
-                }
-            }
-        }
-
         public void ShowAllBooks()
         {
             Console.WriteLine();
@@ -111,7 +106,7 @@ namespace lesson
             Console.Clear();
         }
 
-        public void EnterNewBook(out Book book)
+        public void CreateBook(out Book book)
         {
             Console.WriteLine("\nВы решили добавить книгу.");
             Console.Write("Введите ее название: ");
@@ -153,16 +148,16 @@ namespace lesson
             switch (inputCommand)
             {
                 case CommandFindBookName:
-                    FindBookName(out Book book);
+                    FindBookByName(out Book book);
                     break;
                 case CommandFindBookAutor:
-                    FindBookAutor(out book);
+                    FindBookByAutor(out book);
                     break;
                 case CommandFindBookGenre:
-                    FindBookGenre(out book);
+                    FindBookByGenre(out book);
                     break;
                 case CommandFindBookYear:
-                    FindBookYear(out book);
+                    FindBookByYear(out book);
                     break;
                 default:
                     Console.WriteLine("Такой команды нет");
@@ -170,19 +165,26 @@ namespace lesson
             }
         }
 
-        public void FindBookYear(out Book findBook)
+        private bool isInputNumber(string input, out int number)
+        {
+            input = Console.ReadLine();
+            bool isNumber = int.TryParse(input, out number);
+            return isNumber;
+        }
+
+        private void FindBookByYear(out Book findBook)
         {
             findBook = null;
             bool isFindYearBook = false;
             Console.Write("\nВведите год написания книги: ");
-            string inputFindYear = Console.ReadLine();
-            bool isString = int.TryParse(inputFindYear, out int findYear);
+            string inputFindYear = "";
+            bool isNumber = isInputNumber(inputFindYear, out int findYear);
 
-            while (isString == false)
+            while (isNumber == false)
             {
                 Console.Write("Введите число: ");
                 inputFindYear = Console.ReadLine();
-                isString = int.TryParse(inputFindYear, out findYear);
+                isNumber = int.TryParse(inputFindYear, out findYear);
             }
 
             if (isFindYearBook == false)
@@ -207,7 +209,7 @@ namespace lesson
             Console.Clear();
         }
 
-        public void FindBookName(out Book findBook)
+        private void FindBookByName(out Book findBook)
         {
             findBook = null;
             bool isFindNameBook = false;
@@ -236,7 +238,7 @@ namespace lesson
             Console.Clear();
         }
 
-        public void FindBookGenre(out Book findBook)
+        private void FindBookByGenre(out Book findBook)
         {
             findBook = null;
             bool isFindGenreBook = false;
@@ -265,7 +267,7 @@ namespace lesson
             Console.Clear();
         }
 
-        public void FindBookAutor(out Book findBook)
+        private void FindBookByAutor(out Book findBook)
         {
             findBook = null;
             bool isFindAutorBook = false;
@@ -296,7 +298,7 @@ namespace lesson
 
         public void AddBook()
         {
-            EnterNewBook(out Book book);
+            CreateBook(out Book book);
             _books.Add(book);
             Console.WriteLine("Книга добавлена, нажмите любую кнопку");
             Console.ReadKey();
@@ -306,8 +308,8 @@ namespace lesson
         public void RemoveBook()
         {
             Console.Write("\nВведите номер книги которую необходимо убрать: ");
-            string inputNumberBook = Console.ReadLine();
-            bool isFindBook = int.TryParse(inputNumberBook, out int numberBook);
+            string inputNumberBook = "";
+            bool isFindBook = isInputNumber(inputNumberBook, out int numberBook);
 
             if (isFindBook)
             {
