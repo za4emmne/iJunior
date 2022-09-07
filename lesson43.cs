@@ -148,16 +148,16 @@ namespace lesson
             switch (inputCommand)
             {
                 case CommandFindBookName:
-                    FindBookByName(out Book book);
+                    FindBookByName();
                     break;
                 case CommandFindBookAutor:
-                    FindBookByAutor(out book);
+                    FindBookByAutor();
                     break;
                 case CommandFindBookGenre:
-                    FindBookByGenre(out book);
+                    FindBookByGenre();
                     break;
                 case CommandFindBookYear:
-                    FindBookByYear(out book);
+                    FindBookByYear();
                     break;
                 default:
                     Console.WriteLine("Такой команды нет");
@@ -165,20 +165,19 @@ namespace lesson
             }
         }
 
-        private bool isInputNumber(string input, out int number)
+        private bool IsInputNumber(string input, out int number)
         {
             input = Console.ReadLine();
             bool isNumber = int.TryParse(input, out number);
             return isNumber;
         }
 
-        private void FindBookByYear(out Book findBook)
+        private void FindBookByYear()
         {
-            findBook = null;
             bool isFindYearBook = false;
             Console.Write("\nВведите год написания книги: ");
             string inputFindYear = "";
-            bool isNumber = isInputNumber(inputFindYear, out int findYear);
+            bool isNumber = IsInputNumber(inputFindYear, out int findYear);
 
             while (isNumber == false)
             {
@@ -194,7 +193,6 @@ namespace lesson
                     if (book.Year == findYear)
                     {
                         book.ShowBook();
-                        findBook = book;
                         isFindYearBook = true;
                     }
                 }
@@ -209,9 +207,8 @@ namespace lesson
             Console.Clear();
         }
 
-        private void FindBookByName(out Book findBook)
+        private void FindBookByName()
         {
-            findBook = null;
             bool isFindNameBook = false;
             Console.Write("\nВведите название книги: ");
             string inputFindName = Console.ReadLine();
@@ -223,7 +220,6 @@ namespace lesson
                     if (book.Name == inputFindName)
                     {
                         book.ShowBook();
-                        findBook = book;
                         isFindNameBook = true;
                     }
                 }
@@ -238,9 +234,8 @@ namespace lesson
             Console.Clear();
         }
 
-        private void FindBookByGenre(out Book findBook)
+        private void FindBookByGenre()
         {
-            findBook = null;
             bool isFindGenreBook = false;
             Console.Write("\nВведите жанр книги: ");
             string inputFindGenre = Console.ReadLine();
@@ -252,7 +247,6 @@ namespace lesson
                     if (book.Genre == inputFindGenre)
                     {
                         book.ShowBook();
-                        findBook = book;
                         isFindGenreBook = true;
                     }
                 }
@@ -267,9 +261,8 @@ namespace lesson
             Console.Clear();
         }
 
-        private void FindBookByAutor(out Book findBook)
+        private void FindBookByAutor()
         {
-            findBook = null;
             bool isFindAutorBook = false;
             Console.Write("\nВведите автора книги: ");
             string inputFindAutor = Console.ReadLine();
@@ -281,7 +274,6 @@ namespace lesson
                     if (book.Autor == inputFindAutor)
                     {
                         book.ShowBook();
-                        findBook = book;
                         isFindAutorBook = true;
                     }
                 }
@@ -309,7 +301,7 @@ namespace lesson
         {
             Console.Write("\nВведите номер книги которую необходимо убрать: ");
             string inputNumberBook = "";
-            bool isFindBook = isInputNumber(inputNumberBook, out int numberBook);
+            bool isFindBook = IsInputNumber(inputNumberBook, out int numberBook);
 
             if (isFindBook)
             {
