@@ -10,10 +10,10 @@ namespace lesson
     {
         static void Main(string[] args)
         {
-            const string commandShowGoods = "show";
-            const string commandSellGoods = "buy";
-            const string commandShowPlayerGoods = "goods";
-            const string commandExit = "ext";
+            const string CommandShowProducts = "show";
+            const string CommandSellProducts = "buy";
+            const string CommandShowPlayerProducts = "products";
+            const string CommandExit = "ext";
             bool isExit = false;
             Seller seller = new Seller(0);
             Player player = new Player(100);
@@ -21,24 +21,24 @@ namespace lesson
             while (isExit == false)
             {
                 Console.WriteLine("Добро пожаловать в магазин, выберить действие: ");
-                Console.WriteLine("\nПоказать весь товар - " + commandShowGoods + "\nКупить товар - " + commandSellGoods +
-                    "\nПосмотреть свои покупки - " + commandShowPlayerGoods + "\nВыйти - " + commandExit + "\n");
+                Console.WriteLine("\nПоказать весь товар - " + CommandShowProducts + "\nКупить товар - " + CommandSellProducts +
+                    "\nПосмотреть свои покупки - " + CommandShowPlayerProducts + "\nВыйти - " + CommandExit + "\n");
                 player.ShowMoney();
                 Console.Write("\n\nВаш ввод: ");
                 string playerInputCommand = Console.ReadLine();
 
                 switch (playerInputCommand)
                 {
-                    case commandShowGoods:
+                    case CommandShowProducts:
                         seller.ShowListGoods();
                         break;
-                    case commandSellGoods:
-                        seller.SellGoods(player);
+                    case CommandSellProducts:
+                        seller.SellProducts(player);
                         break;
-                    case commandShowPlayerGoods:
-                        player.ShowListGoods();
+                    case CommandShowPlayerProducts:
+                        player.ShowListProducts();
                         break;
-                    case commandExit:
+                    case CommandExit:
                         isExit = true;
                         break;
                     default:
@@ -49,17 +49,24 @@ namespace lesson
         }
     }
 
-    class Seller
+    class Human
     {
-        public int Money { get; private set; }
+        protected int Money;
 
-        private List<Goods> _goods = new List<Goods>();
+        protected List<Products> _products = new List<Products>();
 
-        public Seller(int money)
+        public Human(int money)
         {
             Money = money;
-            _goods.Add(new Goods("Молоко", 50));
-            _goods.Add(new Goods("Хлеб", 20));
+        }
+    }
+
+    class Seller: Human
+    {
+        public Seller(int money): base (money)
+        {  
+            _products.Add(new Products("Молоко", 50));
+            _products.Add(new Products("Хлеб", 20));
         }
 
         public void ShowListGoods()
@@ -67,9 +74,9 @@ namespace lesson
             Console.Clear();
             Console.WriteLine("Товары в наличии в магазине:\n");
 
-            foreach (var goods in _goods)
+            foreach (var product in _products)
             {
-                goods.Show();
+                product.Show();
             }
 
             Console.WriteLine("Нажмите любую кнопку..");
@@ -77,32 +84,32 @@ namespace lesson
             Console.Clear();
         }
 
-        public void SellGoods(Player player)
+        public void SellProducts(Player player)
         {
-            EnterGoods(out Goods sellGoods);
-            player.TakeGoods(sellGoods);
-            Money += sellGoods.Prise;
+            EnterProducts(out Products sellProducts);
+            player.TakeProducts(sellProducts);
+            Money += sellProducts.Prise;
             Console.ReadKey();
             Console.Clear();
         }
 
-        private void EnterGoods(out Goods findGoods)
-        {            
-            findGoods = null;
-            bool isFindGoods = false;
+        private void EnterProducts(out Products findProducts)
+        {
+            findProducts = null;
+            bool isFindProducts = false;
             Console.Clear();
             Console.Write("\nВведите название товара, котрый хотите купить: ");
 
-            if (isFindGoods == false)
+            if (isFindProducts == false)
             {
-                string nameGoods = Console.ReadLine();
+                string nameProducts = Console.ReadLine();
 
-                foreach (var goods in _goods)
+                foreach (var product in _products)
                 {
-                    if (goods.Name == nameGoods)
+                    if (product.Name == nameProducts)
                     {
-                        findGoods = goods;
-                        isFindGoods = true;
+                        findProducts = product;
+                        isFindProducts = true;
                     }
                 }
             }
@@ -113,24 +120,18 @@ namespace lesson
         }
     }
 
-    class Player
+    class Player: Human
     {
-        public int Money { get; private set; }
+        public Player(int money): base (money)
+        {}
 
-        private List<Goods> _goods = new List<Goods>();
-
-        public Player(int money)
+        public void TakeProducts(Products products)
         {
-            Money = money;
-        }
+            _products.Add(products);
 
-        public void TakeGoods(Goods goods)
-        {
-            _goods.Add(goods);
-
-            if (Money >= goods.Prise)
+            if (Money >= products.Prise)
             {
-                Money -= goods.Prise;
+                Money -= products.Prise;
                 Console.WriteLine("Товар куплен");
             }
             else
@@ -144,17 +145,17 @@ namespace lesson
             Console.WriteLine("Ваш баланс - " + Money + " руб.");
         }
 
-        public void ShowListGoods()
+        public void ShowListProducts()
         {
             Console.Clear();
 
-            if (_goods.Count > 0)
+            if (_products.Count > 0)
             {
                 Console.WriteLine("Вы уже купили:");
 
-                foreach (var goods in _goods)
+                foreach (var product in _products)
                 {
-                    goods.Show();
+                    product.Show();
                 }
             }
             else
@@ -168,12 +169,13 @@ namespace lesson
         }
     }
 
-    class Goods
+    class Products
     {
         public int Prise { get; private set; }
+
         public string Name { get; private set; }
 
-        public Goods(string name, int prise)
+        public Products(string name, int prise)
         {
             Name = name;
             Prise = prise;
