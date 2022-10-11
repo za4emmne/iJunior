@@ -10,41 +10,53 @@ namespace lesson
     {
         static void Main(string[] args)
         {
-            Train train = new Train();
-            WorkProgram workProgram = new WorkProgram(train);
+            int countPassengers = 0;
+            int allCountPassengers = 0;
+            int countCarriage = 0;
+            string startStation = "пусто";
+            string finishStation = "пусто";
+            string typeCarriage = "тип поезда";
+            Carriage carriage = new Carriage(countPassengers, typeCarriage);
+            Train train = new Train(countCarriage, countPassengers, allCountPassengers, startStation, finishStation);
+            Dispatcher dispatcher = new Dispatcher(train, carriage);
         }
     }
 
-    class WorkProgram
+    class Dispatcher
     {
+        private List<Train> _trains = new List<Train>();
 
-        public WorkProgram(Train train)
+        public Dispatcher(Train train, Carriage carriage)
         {
             bool isExit = false;
 
             while (isExit == false)
             {
-                int countPassengers = 0;
-                int countSeatCarriage = 0;
-                int countCoupCarriage = 0;
-                int countSvCarriage = 0;
+                const string CommandExit = "q";
+                int countCarriage = 0;
+                int allCountPassengers = 0;
                 string startStation = "пусто";
                 string finishStation = "пусто";
                 Console.WriteLine("Добро пожаловать в менеджер ЖД путей\n");
-                train.ShowInfo(countPassengers, startStation, finishStation, countSeatCarriage, countCoupCarriage, countSvCarriage);
-                CreateWay(out startStation, out finishStation);
-                SellTicket(out countPassengers);
-
-                while (countPassengers > 0)
+                int countPassengers = 0;
+                train = new Train(countCarriage, countPassengers, allCountPassengers, startStation, finishStation);
+                countPassengers = train.CountPassenger();
+                ShowInfoTrains();
+                train.CreateWay();
+               
+                while (train.CurrentCountPassengers > 0)
                 {
-                    train.ShowInfo(countPassengers, startStation, finishStation, countSeatCarriage, countCoupCarriage, countSvCarriage);
-                    Create(train, ref countPassengers, ref countSeatCarriage, ref countCoupCarriage, ref countSvCarriage);
+                    ShowInfoTrains();
+                    train.ShowInfo();
+                    Create(train, carriage);
                 }
 
-                train.ShowInfo(countPassengers, startStation, finishStation, countSeatCarriage, countCoupCarriage, countSvCarriage);
-                Console.WriteLine("Поезд готов к отправке, нажмите любую клавишу, чтобы составить новый маршрут или q, чтобы выйти..");
+                ShowInfoTrains();
+                train.ShowInfo();
+                Console.WriteLine("Поезд готов к отправке, нажмите любую клавишу, чтобы составить новый маршрут или " + CommandExit + ", чтобы выйти..");
+                _trains.Add(train);
 
-                if (Console.ReadLine() == "q")
+                if (Console.ReadLine() == CommandExit)
                 {
                     isExit = true;
                 }
@@ -53,48 +65,47 @@ namespace lesson
             }
         }
 
-        public void CreateWay(out string startStation, out string finishStation)
+        public void ShowInfoTrains()
         {
-            Console.Write("Чтобы создать маршрут поезда введите станцию отправления: ");
-            startStation = Console.ReadLine();
-            Console.Write("Теперь введите стандию прибытия: ");
-            finishStation = Console.ReadLine();
-            Console.Clear();
+            Console.WriteLine("История рейсов:");
+
+            foreach (var train in _trains)
+            {
+                Console.WriteLine($"Станция отправления: [{train.StartStation}] Станция прибытия: [{train.FinishStation}], количество пассажиров в поезде: [{train.AllCountPassengers}]");
+            }
+
+            Console.WriteLine();
         }
 
-        public void SellTicket(out int countPassengers)
+        public void Create(Train train, Carriage carriage)
         {
-            int minCoutPassengers = 1;
-            int maxCountPassengers = 400;
-            Random random = new Random();
-            countPassengers = random.Next(minCoutPassengers, maxCountPassengers);
-        }
-
-        public void Create(Train train, ref int countPassengers, ref int countSeatCarriage, ref int countCoupCarriage, ref int countSvCarriage)
-        {
-            const string commandSeatCarriage = "1";
-            const string commandCoupCarriage = "2";
-            const string commandSvCarriage = "3";
-            const string seatCarriage = "плацкарт";
-            const string coupCarriage = "купе";
-            const string svCarriage = "СВ";
-            const int countSeatPassengers = 54;
-            const int countCoupPassengers = 36;
-            const int countSvPassengers = 18;
+            const string CommandSeatCarriage = "1";
+            const string CommandCoupCarriage = "2";
+            const string CommandSvCarriage = "3";
+            const string SeatCarriageName = "плацкарт";
+            const string CoupCarriageName = "купе";
+            const string SvCarriageName = "СВ";
+            const int CountSeatPassengers = 54;
+            const int CountCoupPassengers = 36;
+            const int CountSvPassengers = 18;
+            Carriage SeatCarriage = new Carriage(CountSeatPassengers, SeatCarriageName);
+            Carriage CoupCarriage = new Carriage(CountCoupPassengers, CoupCarriageName);
+            Carriage SvCarriage = new Carriage(CountSvPassengers, SvCarriageName);
             Console.WriteLine("Выберите вагоны которые хотите добавить в состав поезда: ");
-            Console.Write("плацкарт(54 пассажира)  - нажмите 1\nкупе(36 пассажиров)     - нажмите 2\nСВ(18 пассажиров)       - нажмите 3\nВаш выбор: ");
+            Console.Write($"плацкарт({CountSeatPassengers} пассажира)  - нажмите 1\nкупе({CountCoupPassengers} пассажиров)     - нажмите 2\nСВ({CountSvPassengers} " +
+                $"пассажиров)       - нажмите 3\nВаш выбор: ");
             string inputCarriage = Console.ReadLine();
 
             switch (inputCarriage)
             {
-                case commandSeatCarriage:
-                    train.AddCarriage(seatCarriage, ref countPassengers, countSeatPassengers, ref countSeatCarriage);
+                case CommandSeatCarriage:
+                    train.AddCarriage(SeatCarriage);
                     break;
-                case commandCoupCarriage:
-                    train.AddCarriage(coupCarriage, ref countPassengers, countCoupPassengers, ref countCoupCarriage);
+                case CommandCoupCarriage:
+                    train.AddCarriage(CoupCarriage);
                     break;
-                case commandSvCarriage:
-                    train.AddCarriage(svCarriage, ref countPassengers, countSvPassengers, ref countSvCarriage);
+                case CommandSvCarriage:
+                    train.AddCarriage(SvCarriage);
                     break;
                 default:
                     Console.WriteLine("Такой команды нет");
@@ -108,31 +119,56 @@ namespace lesson
     class Train
     {
         private List<Carriage> _carriages = new List<Carriage>();
+        public int CurrentCountPassengers { get; private set; }
+        public int AllCountPassengers { get; private set; }
+        public string StartStation { get; private set; }
+        public string FinishStation { get; private set; }
+        protected int CountCarriage;
 
-        public Train()
+        public Train(int countCarriage, int currentCountPassengers, int allCountPassengers, string startStation = "пусто", string finishStation = "пусто")
         {
+            CurrentCountPassengers = currentCountPassengers;
+            StartStation = startStation;
+            FinishStation = finishStation;
+            CountCarriage = countCarriage;
+            AllCountPassengers = allCountPassengers;
         }
 
-        public void AddCarriage(string typeCarriage, ref int countTrainPassengers, int countCarriagePassengers, ref int countCarriage)
+        public void CreateWay()
         {
-            _carriages.Add(new Carriage(countCarriagePassengers, typeCarriage));
-            countTrainPassengers -= countCarriagePassengers;
-            countCarriage++;
+            Console.Write("Чтобы создать маршрут поезда введите станцию отправления: ");
+            StartStation = Console.ReadLine();
+            Console.Write("Теперь введите стандию прибытия: ");
+            FinishStation = Console.ReadLine();
+            Console.Clear();
+        }
+        public int CountPassenger()
+        {
+            int minCountPassengers = 1;
+            int maxCountPassengers = 400;
+            Random random = new Random();
+            CurrentCountPassengers = random.Next(minCountPassengers, maxCountPassengers);
+            AllCountPassengers = CurrentCountPassengers;
+            return CurrentCountPassengers;
         }
 
-        public void ShowInfo(int countPassengers, string startStation, string finishStation, int countSeatCarriage, int countCoupCarriage,
-            int countSvCarriage)
+        public void AddCarriage(Carriage carriage)
+        {
+            _carriages.Add(carriage);
+            CurrentCountPassengers -= carriage.Passengers;
+            _carriages.Add(carriage);
+            CountCarriage++;
+        }
+
+        public void ShowInfo()
         {
             Console.WriteLine("Текущий маршрут: ");
-            Console.WriteLine($"Станция отправления: [{startStation}] Станция прибытия: [{finishStation}]\n");
-            Console.WriteLine("В состав поезда входит: ");
-            Console.WriteLine("Вагоны плацкарт: " + countSeatCarriage);
-            Console.WriteLine("Вагоны купе: " + countCoupCarriage);
-            Console.WriteLine("Вагоны СВ: " + countSvCarriage);
+            Console.WriteLine($"Станция отправления: [{StartStation}] Станция прибытия: [{FinishStation}]\n");
+            Console.WriteLine($"В состав поезда входит: {CountCarriage} вагонов");
 
-            if (countPassengers > 0)
+            if (CurrentCountPassengers > 0)
             {
-                Console.WriteLine("\nВ поезд необходимо разместить: " + countPassengers + " пассажиров.\n");
+                Console.WriteLine("\nВ поезд необходимо разместить: " + CurrentCountPassengers + " пассажиров.\n");
             }
             else
             {
@@ -145,8 +181,8 @@ namespace lesson
 
     class Carriage
     {
-        protected int Passengers;
-        protected string Type;
+        public int Passengers { get; private set; }
+        private string Type;
 
         public Carriage(int passengers, string type)
         {
