@@ -10,15 +10,7 @@ namespace lesson
     {
         static void Main(string[] args)
         {
-            int countPassengers = 0;
-            int allCountPassengers = 0;
-            int countCarriage = 0;
-            string startStation = "пусто";
-            string finishStation = "пусто";
-            string typeCarriage = "тип поезда";
-            Carriage carriage = new Carriage(countPassengers, typeCarriage);
-            Train train = new Train(countCarriage, countPassengers, allCountPassengers, startStation, finishStation);
-            Dispatcher dispatcher = new Dispatcher(train, carriage);
+            Dispatcher dispatcher = new Dispatcher();
         }
     }
 
@@ -26,7 +18,7 @@ namespace lesson
     {
         private List<Train> _trains = new List<Train>();
 
-        public Dispatcher(Train train, Carriage carriage)
+        public Dispatcher()
         {
             bool isExit = false;
 
@@ -39,7 +31,7 @@ namespace lesson
                 string finishStation = "пусто";
                 Console.WriteLine("Добро пожаловать в менеджер ЖД путей\n");
                 int countPassengers = 0;
-                train = new Train(countCarriage, countPassengers, allCountPassengers, startStation, finishStation);
+                Train train = new Train(countCarriage, countPassengers, allCountPassengers, startStation, finishStation);
                 countPassengers = train.CountPassenger();
                 ShowInfoTrains();
                 train.CreateWay();
@@ -48,7 +40,7 @@ namespace lesson
                 {
                     ShowInfoTrains();
                     train.ShowInfo();
-                    Create(train, carriage);
+                    Create(train);
                 }
 
                 ShowInfoTrains();
@@ -77,7 +69,7 @@ namespace lesson
             Console.WriteLine();
         }
 
-        public void Create(Train train, Carriage carriage)
+        public void Create(Train train)
         {
             const string CommandSeatCarriage = "1";
             const string CommandCoupCarriage = "2";
@@ -118,12 +110,12 @@ namespace lesson
 
     class Train
     {
+        protected int CountCarriage;
         private List<Carriage> _carriages = new List<Carriage>();
         public int CurrentCountPassengers { get; private set; }
         public int AllCountPassengers { get; private set; }
         public string StartStation { get; private set; }
         public string FinishStation { get; private set; }
-        protected int CountCarriage;
 
         public Train(int countCarriage, int currentCountPassengers, int allCountPassengers, string startStation = "пусто", string finishStation = "пусто")
         {
@@ -181,8 +173,8 @@ namespace lesson
 
     class Carriage
     {
-        public int Passengers { get; private set; }
         private string Type;
+        public int Passengers { get; private set; }      
 
         public Carriage(int passengers, string type)
         {
