@@ -35,7 +35,7 @@ namespace lesson
                 countPassengers = train.CountPassenger();
                 ShowInfoTrains();
                 train.CreateWay();
-               
+
                 while (train.CurrentCountPassengers > 0)
                 {
                     ShowInfoTrains();
@@ -173,13 +173,13 @@ namespace lesson
 
     class Carriage
     {
-        private string Type;
-        public int Passengers { get; private set; }      
+        private string _type;
+        public int Passengers { get; private set; }
 
         public Carriage(int passengers, string type)
         {
             Passengers = passengers;
-            Type = type;
+            _type = type;
         }
     }
 }
