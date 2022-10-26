@@ -11,6 +11,7 @@ namespace lesson
         static void Main(string[] args)
         {
             FighterClub fighterClub = new FighterClub();
+            fighterClub.Fight();
         }
     }
 
@@ -20,22 +21,19 @@ namespace lesson
 
         public FighterClub()
         {
-            Fighter leftFighter = null;
-            Fighter rightFighter = null;
-            AddFighters();
-            ChooseFighters(out leftFighter, out rightFighter);
-            Fight(leftFighter, rightFighter);
         }
 
-        public void Fight(Fighter leftFighter, Fighter rightFighter)
+        public void Fight()
         {
             int round = 1;
+            AddFighters();
+            ChooseFighters(out Fighter leftFighter, out Fighter rightFighter);
 
             while (leftFighter.Health > 0 && rightFighter.Health > 0)
             {
                 Console.WriteLine("\nРАУНД - " + round);
-                leftFighter.TakeDamage(rightFighter.Attack(round), round);
-                rightFighter.TakeDamage(leftFighter.Attack(round), round);
+                leftFighter.MakeDamage(round, rightFighter);
+                rightFighter.MakeDamage(round, leftFighter);
                 leftFighter.ShowStats();
                 rightFighter.ShowStats();
                 round++;
@@ -45,64 +43,53 @@ namespace lesson
             {
                 Console.WriteLine("\nПобедил боец слева: " + leftFighter.Name);
             }
-            else
+            else if (rightFighter.Health > 0)
             {
                 Console.WriteLine("\nПобедил боец справа " + rightFighter.Name);
+            }
+            else if (leftFighter.Health < 0 && rightFighter.Health < 0)
+            {
+                Console.WriteLine("\nНичья - победила дружба");
             }
         }
 
         public void ChooseFighters(out Fighter leftFighter, out Fighter rightFighter)
         {
-            bool fighterLeftIsReady = false;
-            bool fighterRightIsReady = false;
-            string playerChoose;
             leftFighter = null;
             rightFighter = null;
+            Console.Write("\nДля выбора бойца справа введите его имя: ");
+            rightFighter = ChooseFighter();
+            Console.Write("\nДля выбора бойца слева введите его имя: ");
+            leftFighter = ChooseFighter();
+        }
 
+        public Fighter ChooseFighter()
+        {
+            Fighter chooseFighter = null;
+            bool fighterIsReady = false;
+            string playerChoose;
 
-            while (fighterLeftIsReady == false)
+            while (fighterIsReady == false)
             {
-                Console.Write("\nДля выбора бойца слева введите его имя: ");
                 playerChoose = Console.ReadLine();
 
-                if (fighterLeftIsReady == false)
+                if (fighterIsReady == false)
                 {
                     foreach (var fighter in _fighters)
                     {
                         if (fighter.Name == playerChoose)
                         {
-                            leftFighter = fighter;
-                            fighterLeftIsReady = true;
+                            fighterIsReady = true;
+                            chooseFighter = fighter;
+                            return chooseFighter;
                         }
                     }
-                }
-                else
-                {
                     Console.Write("Такого бойца нет..");
+                    Console.Write("\nВведите имя снова: ");
                 }
             }
 
-            while (fighterRightIsReady == false)
-            {
-                Console.Write("\nДля выбора бойца справа введите его имя: ");
-                playerChoose = Console.ReadLine();
-
-                if (fighterRightIsReady == false)
-                {
-                    foreach (var fighter in _fighters)
-                    {
-                        if (fighter.Name == playerChoose)
-                        {
-                            rightFighter = fighter;
-                            fighterRightIsReady = true;
-                        }
-                    }
-                }
-                else
-                {
-                    Console.Write("Такого бойца нет..");
-                }
-            }
+            return chooseFighter;
         }
 
         public void AddFighters()
@@ -175,11 +162,11 @@ namespace lesson
     }
 
     class Fighter
-    {
+    { 
+        protected int Armor;
         public int Health { get; private set; }
         public string Name { get; private set; }
         public int Damage { get; protected set; }
-        protected int Armor;
 
         public Fighter(string name, int health, int damage, int armor)
         {
@@ -189,15 +176,9 @@ namespace lesson
             Armor = armor;
         }
 
-        public virtual int Attack(int round)
+        public virtual void MakeDamage(int round, Fighter fighter)
         {
-           return Damage;
-        }
-
-        public virtual void TakeDamage(int damage, int round)
-        {
-            Health -= damage - Armor;
-            Armor -= 2;
+            fighter.Health -= this.Damage - fighter.Armor;
         }
 
         public virtual void ShowInfo()
@@ -214,29 +195,33 @@ namespace lesson
     class Wizard : Fighter
     {
         protected int Manna;
-        private int decreaseManna = 3;
+        private int _decreaseManna = 3;
 
         public Wizard(string name, int health, int damage, int armor, int manna) : base(name, health, damage, armor)
         {
             Manna = manna;
         }
 
-        public override int Attack(int round)
-        { 
-            SkyAttack();
-            return base.Attack(round);
+        public override void MakeDamage(int round, Fighter fighter)
+        {
+            UseManna();
+            base.MakeDamage(round, fighter);
         }
 
-        public void SkyAttack()
+        public void UseManna()
         {
             Damage += Manna;
-            Manna -= decreaseManna;
+
+            if (Manna > 0)
+            {
+                Manna -= _decreaseManna;
+            }
         }
 
         public override void ShowInfo()
         {
             base.ShowInfo();
-            Console.WriteLine($"Атака небес - атака с каждым ударом увеличивается на величину равной манны - {Manna} ед., в после раундах, манна будет уменьшаться на {decreaseManna} ед.");
+            Console.WriteLine($"Атака небес - атака с каждым ударом увеличивается на величину равной манны - {Manna} ед., в после раундах, манна будет уменьшаться на {_decreaseManna} ед.");
         }
 
         public override void ShowStats()
@@ -251,10 +236,10 @@ namespace lesson
         {
         }
 
-        public override int Attack(int round)
+        public override void MakeDamage(int round, Fighter fighter)
         {
             MegaAttack();
-            return base.Attack(round);
+            base.MakeDamage(round, fighter);
         }
 
         public void MegaAttack()
@@ -279,23 +264,18 @@ namespace lesson
         {
         }
 
-        public override int Attack(int round)
+        public override void MakeDamage(int round, Fighter fighter)
         {
             ShurikenAttack(round);
-            return base.Attack(round);
-        }
 
-        public override void TakeDamage(int damage, int round)
-        {
             if (round % 3 == 0)
             {
-                damage = 0;
-                Console.WriteLine("Соперник промахнулся!");
+                Console.WriteLine("Соперник промахнулся..");
             }
             else
             {
-                base.TakeDamage(damage, round);
-            }           
+                base.MakeDamage(round, fighter);
+            }
         }
 
         public void ShurikenAttack(int round)
@@ -318,17 +298,18 @@ namespace lesson
         {
         }
 
-        public override int Attack(int round)
+        public override void MakeDamage(int round, Fighter fighter)
         {
             ArrowAttack(round);
-            return base.Attack(round);
+            base.MakeDamage(round, fighter);
         }
 
         public void ArrowAttack(int round)
         {
+            int damageBonus = 1;
             if (round % 2 == 0)
             {
-                Damage += 1;
+                Damage += damageBonus;
             }
         }
 
@@ -345,19 +326,20 @@ namespace lesson
         {
         }
 
-        public override int Attack(int round)
+        public override void MakeDamage(int round, Fighter fighter)
         {
             DeadCall();
-            return base.Attack(round);
+            base.MakeDamage(round, fighter);
         }
 
         public void DeadCall()
         {
+            int armorBonus = 30;
             int minHealth = Health / 10;
 
             if (Health < minHealth)
             {
-                Armor += 30;
+                Armor += armorBonus;
             }
         }
 
