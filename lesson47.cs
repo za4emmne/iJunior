@@ -36,6 +36,11 @@ namespace lesson
                 round++;
             }
 
+            ShowWinner(leftFighter, rightFighter); 
+        }
+
+        private void ShowWinner(Fighter leftFighter, Fighter rightFighter)
+        {
             if (leftFighter.Health > 0)
             {
                 Console.WriteLine("\nПобедил боец слева: " + leftFighter.Name);
@@ -194,15 +199,15 @@ namespace lesson
             Console.WriteLine($"\nИмя: {Name}\nЗдоровье: {Health}\nАтака: {Damage}\nБроня: {Armor}");
         }
     }
-
+    
     class Wizard : Fighter
     {
-        private int Manna;
+        private int _manna;
         private int _decreaseManna = 3;
 
         public Wizard(string name, int health, int damage, int armor, int manna) : base(name, health, damage, armor)
         {
-            Manna = manna;
+            _manna = manna;
         }
 
         public override void TakeDamage(int round, Fighter fighter)
@@ -218,23 +223,23 @@ namespace lesson
 
         public void UseManna()
         {
-            Damage += Manna;
+            Damage += _manna;
 
-            if (Manna > 0)
+            if (_manna > 0)
             {
-                Manna -= _decreaseManna;
+                _manna -= _decreaseManna;
             }
         }
 
         public override void ShowInfo()
         {
             base.ShowInfo();
-            Console.WriteLine($"Атака небес - атака с каждым ударом увеличивается на величину равной манны - {Manna} ед., в после раундах, манна будет уменьшаться на {_decreaseManna} ед.");
+            Console.WriteLine($"Атака небес - атака с каждым ударом увеличивается на величину равной манны - {_manna} ед., в после раундах, манна будет уменьшаться на {_decreaseManna} ед.");
         }
 
         public override void ShowStats()
         {
-            Console.WriteLine($"\nИмя: {Name}\nЗдоровье: {Health}\nАтака: {Damage}\nБроня: {Armor}\nМанна: {Manna} - добавется к атаке в след раунде");
+            Console.WriteLine($"\nИмя: {Name}\nЗдоровье: {Health}\nАтака: {Damage}\nБроня: {Armor}\nМанна: {_manna} - добавется к атаке в след раунде");
         }
     }
 
@@ -262,7 +267,7 @@ namespace lesson
 
             if (Health < minimumHealth)
             {
-                Damage *= 2;
+                Damage += Damage;
             }
         }
         public override void ShowInfo()
@@ -306,7 +311,7 @@ namespace lesson
 
             if (round % roundNumber == half)
             {
-                Damage += Damage / 2;
+                Damage += Damage / half;
             }
         }
 
