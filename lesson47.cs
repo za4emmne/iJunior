@@ -36,7 +36,7 @@ namespace lesson
                 round++;
             }
 
-            ShowWinner(leftFighter, rightFighter); 
+            ShowWinner(leftFighter, rightFighter);
         }
 
         private void ShowWinner(Fighter leftFighter, Fighter rightFighter)
@@ -75,15 +75,13 @@ namespace lesson
 
                 if (fighterIsReady == false && isNumber)
                 {
-                    for (int i = 0; i < _fighters.Count; i++)
-                    {
-                        if (i == fighterNumber - 1)
+                    if (fighterNumber - 1<_fighters.Count)
                         {
                             fighterIsReady = true;
-                            chooseFighter = _fighters.ElementAt(i);
+                            chooseFighter = _fighters.ElementAt(fighterNumber-1);
                             return chooseFighter;
                         }
-                    }
+                    
                     Console.Write("Такого бойца нет..");
                     Console.Write("\nВведите порядковый снова: ");
                 }
@@ -199,7 +197,7 @@ namespace lesson
             Console.WriteLine($"\nИмя: {Name}\nЗдоровье: {Health}\nАтака: {Damage}\nБроня: {Armor}");
         }
     }
-    
+
     class Wizard : Fighter
     {
         private int _manna;
