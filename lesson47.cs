@@ -65,8 +65,8 @@ namespace lesson
 
         public Fighter ChooseFighter()
         {
-            Fighter chooseFighter = null;
             bool fighterIsReady = false;
+            Fighter chooseFighter = null;
 
             while (fighterIsReady == false)
             {
@@ -75,15 +75,18 @@ namespace lesson
 
                 if (fighterIsReady == false && isNumber)
                 {
-                    if (fighterNumber - 1<_fighters.Count)
-                        {
-                            fighterIsReady = true;
-                            chooseFighter = _fighters.ElementAt(fighterNumber-1);
-                            return chooseFighter;
-                        }
-                    
-                    Console.Write("Такого бойца нет..");
-                    Console.Write("\nВведите порядковый снова: ");
+                    if (fighterNumber - 1 < _fighters.Count)
+                    {
+                        fighterIsReady = true;
+                        Fighter findFighter = _fighters.ElementAt(fighterNumber - 1);
+                        chooseFighter = new Fighter(findFighter.Name, findFighter.Health, findFighter.Damage, findFighter.Armor);
+                    }
+                    else
+                    {
+                        Console.Write("Такого бойца нет..");
+                        Console.Write("\nВведите порядковый снова: ");
+                        return null;
+                    }
                 }
             }
 
@@ -164,7 +167,7 @@ namespace lesson
 
     class Fighter
     {
-        protected int Armor;
+        public int Armor { get; protected set; }
         public int Health { get; private set; }
         public string Name { get; private set; }
         public int Damage { get; protected set; }
