@@ -55,7 +55,7 @@ namespace lesson
             }
         }
 
-        public void ChooseFighters(out Fighter leftFighter, out Fighter rightFighter)
+        private void ChooseFighters(out Fighter leftFighter, out Fighter rightFighter)
         {
             Console.Write("\nДля выбора бойца справа введите его порядковый номер: ");
             rightFighter = ChooseFighter();
@@ -63,7 +63,7 @@ namespace lesson
             leftFighter = ChooseFighter();
         }
 
-        public Fighter ChooseFighter()
+        private Fighter ChooseFighter()
         {
             bool fighterIsReady = false;
             Fighter chooseFighter = null;
@@ -93,7 +93,7 @@ namespace lesson
             return chooseFighter;
         }
 
-        public void AddFighters()
+        private void AddFighters()
         {
             int minHealthWizard = 70;
             int maxHealthWizard = 120;
@@ -222,7 +222,7 @@ namespace lesson
             return Damage;
         }
 
-        public void UseManna()
+        private void UseManna()
         {
             Damage += _manna;
 
@@ -257,11 +257,11 @@ namespace lesson
 
         public override int Attack(int round)
         {
-            MegaAttack();
+            RepeatAttack();
             return Damage;
         }
 
-        public void MegaAttack()
+        private void RepeatAttack()
         {
             int quarter = 4;
             int minimumHealth = Health / quarter;
@@ -301,11 +301,11 @@ namespace lesson
 
         public override int Attack(int round)
         {
-            ShurikenAttack(round);
+            AttackWithShuriken(round);
             return Damage;
         }
 
-        public void ShurikenAttack(int round)
+        private void AttackWithShuriken(int round)
         {
             int roundNumber = 4;
             int half = 2;
@@ -335,11 +335,11 @@ namespace lesson
 
         public override int Attack(int round)
         {
-            ArrowAttack(round);
+            AttackWithSpear(round);
             return Damage;
         }
 
-        public void ArrowAttack(int round)
+        private void AttackWithSpear(int round)
         {
             int evenNumber = 2;
             int damageBonus = 1;
@@ -368,7 +368,7 @@ namespace lesson
 
         public override void TakeDamage(int round, Fighter fighter)
         {
-            DeadCall();
+            UseArmorBonus();
             base.TakeDamage(round, fighter);
         }
 
@@ -377,7 +377,7 @@ namespace lesson
             return Damage;
         }
 
-        public void DeadCall()
+        private void UseArmorBonus()
         {
             int minHealth = Health / _denominator;
 
