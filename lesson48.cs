@@ -12,8 +12,6 @@ namespace lesson
         static void Main(string[] args)
         {
             Supermarket supermarket = new Supermarket();
-            supermarket.CreateProductsList();
-            supermarket.CreateCustomers();
             supermarket.ServeCustomers();
         }
     }
@@ -21,10 +19,16 @@ namespace lesson
     class Supermarket
     {
         private Random _random = new Random();
-        private Queue<Buyer> _customers = new Queue<Buyer>();
+        private Queue<Customer> _customers = new Queue<Customer>();
         private List<Product> _products = new List<Product>();
 
-        public void CreateProductsList()
+        public Supermarket()
+        {
+            CreateProductsList();
+            CreateCustomers();
+        }
+
+        private void CreateProductsList()
         {
             _products.Add(new Product("Молоко", 50));
             _products.Add(new Product("Хлеб", 30));
@@ -54,29 +58,26 @@ namespace lesson
 
         public void ServeCustomers()
         {
-            int buyerNumber = 1;
-
-            foreach (var buyer in _customers)
+            while (_customers.Count > 0)
             {
                 Console.WriteLine("Добро пожаловать в ОШАН\n\nВ очереди " + _customers.Count + " покупателей\n");
-                Console.WriteLine("На кассе покупатель №" + buyerNumber);
                 Console.WriteLine("Нажмите любую клавишу, чтобы пригласить покупателя\n");
                 Console.ReadKey();
-                buyer.ShowBasket();
+                _customers.Peek().ShowBasket();
 
-                while (buyer.Money < buyer.BasketCost)
+                while (_customers.Peek().Money < _customers.Peek().BasketCost)
                 {
                     Console.WriteLine("У вас не хватает денег, нажмите любую клавишу,чтобы выложить случайный товар..");
                     Console.ReadKey();
                     Console.Clear();
-                    buyer.RemoveProduct();
-                    buyer.ShowBasket();
+                    _customers.Peek().RemoveProduct();
+                    _customers.Peek().ShowBasket();
                 }
 
                 Console.WriteLine("Отлично, покупатель расплатился, нажмите любую клавишу, чтобы пригласить на кассу следующего..\n");
+                _customers.Dequeue();
                 Console.ReadKey();
                 Console.Clear();
-                buyerNumber++;
             }
 
             Console.WriteLine("Покупатели закончились, можно пойти попить кофе");
@@ -84,24 +85,23 @@ namespace lesson
 
         public void CreateCustomers()
         {
-            int countBuyer = _random.Next(1, 15);
+            int countCustomers = _random.Next(1, 15);
 
-            while (countBuyer > 0)
+            for (int i = 0; i < countCustomers; i++)
             {
-                int buyerMoney = _random.Next(100, 600);
-                int basketCoast = 0;
-                _customers.Enqueue(new Buyer(buyerMoney, basketCoast));
-                countBuyer--;
+                int customersMoney = _random.Next(100, 600);
+                _customers.Enqueue(new Customer(customersMoney));
+                countCustomers--;
             }
 
             foreach (var buyer in _customers)
             {
                 int countProducts = _random.Next(1, 9);
 
-                while (countProducts > 0)
+                for (int i = 0; i < countProducts; i++)
                 {
-                    Product product = _products.ElementAt(_random.Next(0, countProducts));
-                    buyer.AddProducts(product);
+                    Product product = _products[_random.Next(0, countProducts)];
+                    buyer.AddProduct(product);
                     countProducts--;
                 }
             }
@@ -109,17 +109,16 @@ namespace lesson
     }
 }
 
-class Buyer
+class Customer
 {
     private Random _random = new Random();
     private List<Product> _products = new List<Product>();
     public int Money { get; private set; }
     public int BasketCost { get; private set; }
 
-    public Buyer(int money, int basketCoast)
+    public Customer(int money)
     {
         Money = money;
-        BasketCost = basketCoast;
     }
 
     public void RemoveProduct()
@@ -131,7 +130,7 @@ class Buyer
         _products.RemoveAt(numberProduct);
     }
 
-    public void AddProducts(Product product)
+    public void AddProduct(Product product)
     {
         _products.Add(product);
         BasketCost += product.Price;
@@ -141,7 +140,7 @@ class Buyer
     {
         foreach (var product in _products)
         {
-            product.ShowProduct();
+            product.Show();
         }
 
         Console.WriteLine("Стоимость покупки составит: " + BasketCost);
@@ -160,7 +159,7 @@ class Product
         Price = price;
     }
 
-    public void ShowProduct()
+    public void Show()
     {
         Console.WriteLine($"Товар - {Name}, цена - {Price}");
     }
