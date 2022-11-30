@@ -28,6 +28,64 @@ namespace lesson
             CreateCustomers();
         }
 
+        public void ServeCustomers()
+        {
+            while (_customers.Count > 0)
+            {
+                Console.WriteLine("Добро пожаловать в ОШАН\n\nВ очереди " + _customers.Count + " покупателей\n");
+                Console.WriteLine("Нажмите любую клавишу, чтобы пригласить покупателя\n");
+                Console.ReadKey();
+                Customer customer = _customers.Peek();
+                customer.ShowBasket();
+
+                while (_customers.Peek().Money < _customers.Peek().BasketCost)
+                {
+                    Console.WriteLine("У вас не хватает денег, нажмите любую клавишу,чтобы выложить случайный товар..");
+                    Console.ReadKey();
+                    Console.Clear();
+                    customer.RemoveProduct();
+                    customer.ShowBasket();
+                }
+
+                _customers.Dequeue();
+                Console.WriteLine("Отлично, покупатель расплатился, нажмите любую клавишу, чтобы пригласить на кассу следующего..\n");
+                Console.ReadKey();
+                Console.Clear();
+            }
+
+            Console.WriteLine("Покупатели закончились, можно пойти попить кофе");
+        }
+
+        public void CreateCustomers()
+        {
+            int minCountCustomers = 1;
+            int maxCountCustomers = 15;
+            int minCustomerMoney = 100;
+            int maxCustomerMoney = 600;
+            int minCountProduct = 1;
+            int maxCountProduct = 1;
+            int countCustomers = _random.Next(minCountCustomers, maxCountCustomers);
+
+            for (int i = 0; i < countCustomers; i++)
+            {
+                int customersMoney = _random.Next(minCustomerMoney, maxCustomerMoney);
+                _customers.Enqueue(new Customer(customersMoney));
+                countCustomers--;
+            }
+
+            foreach (var buyer in _customers)
+            {
+                int countProducts = _random.Next(minCountProduct, maxCountProduct);
+
+                for (int i = 0; i < countProducts; i++)
+                {
+                    Product product = _products[_random.Next(0, countProducts)];
+                    buyer.AddProduct(product);
+                    countProducts--;
+                }
+            }
+        }
+
         private void CreateProductsList()
         {
             _products.Add(new Product("Молоко", 50));
@@ -54,57 +112,6 @@ namespace lesson
             _products.Add(new Product("Рис", 80));
             _products.Add(new Product("Чай", 100));
             _products.Add(new Product("Кофе", 313));
-        }
-
-        public void ServeCustomers()
-        {
-            while (_customers.Count > 0)
-            {
-                Console.WriteLine("Добро пожаловать в ОШАН\n\nВ очереди " + _customers.Count + " покупателей\n");
-                Console.WriteLine("Нажмите любую клавишу, чтобы пригласить покупателя\n");
-                Console.ReadKey();
-                _customers.Peek().ShowBasket();
-
-                while (_customers.Peek().Money < _customers.Peek().BasketCost)
-                {
-                    Console.WriteLine("У вас не хватает денег, нажмите любую клавишу,чтобы выложить случайный товар..");
-                    Console.ReadKey();
-                    Console.Clear();
-                    _customers.Peek().RemoveProduct();
-                    _customers.Peek().ShowBasket();
-                }
-
-                Console.WriteLine("Отлично, покупатель расплатился, нажмите любую клавишу, чтобы пригласить на кассу следующего..\n");
-                _customers.Dequeue();
-                Console.ReadKey();
-                Console.Clear();
-            }
-
-            Console.WriteLine("Покупатели закончились, можно пойти попить кофе");
-        }
-
-        public void CreateCustomers()
-        {
-            int countCustomers = _random.Next(1, 15);
-
-            for (int i = 0; i < countCustomers; i++)
-            {
-                int customersMoney = _random.Next(100, 600);
-                _customers.Enqueue(new Customer(customersMoney));
-                countCustomers--;
-            }
-
-            foreach (var buyer in _customers)
-            {
-                int countProducts = _random.Next(1, 9);
-
-                for (int i = 0; i < countProducts; i++)
-                {
-                    Product product = _products[_random.Next(0, countProducts)];
-                    buyer.AddProduct(product);
-                    countProducts--;
-                }
-            }
         }
     }
 }
