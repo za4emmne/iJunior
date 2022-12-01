@@ -81,7 +81,6 @@ namespace lesson
                 {
                     Product product = _products[_random.Next(0, countProducts)];
                     buyer.AddProduct(product);
-                    countProducts--;
                 }
             }
         }
