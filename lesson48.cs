@@ -70,7 +70,6 @@ namespace lesson
             {
                 int customersMoney = _random.Next(minCustomerMoney, maxCustomerMoney);
                 _customers.Enqueue(new Customer(customersMoney));
-                countCustomers--;
             }
 
             foreach (var buyer in _customers)
