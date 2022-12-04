@@ -50,7 +50,7 @@ namespace lesson
     class Aquarium
     {
         private Random _random = new Random();
-        private List<Fish> _fishs = new List<Fish>();
+        private List<Fish> _pisces = new List<Fish>();
         private int MaxCountFish;
         public Aquarium(int maxCountFish)
         {
@@ -60,31 +60,31 @@ namespace lesson
 
         public void FishDead()
         {
-            for (int i = 0; i<_fishs.Count; i++)
+            for (int i = 0; i<_pisces.Count; i++)
             {
-                if (_fishs.ElementAt(i).Life < 0)
+                if (_pisces.ElementAt(i).Life < 0)
                 {
-                    _fishs.RemoveAt(i);
+                    _pisces.RemoveAt(i);
                 }
             }
         }
 
         public void RemoveFish()
         {
-            if (_fishs.Count > 0)
+            if (_pisces.Count > 0)
             {
                 Console.Write("Введите номер той рыбки, которую хотите достать: ");
                 string playerChoose = Console.ReadLine();
                 int.TryParse(playerChoose, out int fishNumber);
-                _fishs.RemoveAt(fishNumber - 1);
+                _pisces.RemoveAt(fishNumber - 1);
             }
         }
 
         public void AddFish()
         {
-            if (_fishs.Count < MaxCountFish)
+            if (_pisces.Count < MaxCountFish)
             {
-                _fishs.Add(CreateFish());
+                _pisces.Add(CreateFish());
             }
             else
             {
@@ -94,12 +94,12 @@ namespace lesson
 
         public void ShowStats(int oldSpeed)
         {
-            Console.WriteLine("Это аквариум, в нем сейчас живет - " + _fishs.Count + " рыб\nВ него помещается максимум " + MaxCountFish + " рыб\nПосле " +
+            Console.WriteLine("Это аквариум, в нем сейчас живет - " + _pisces.Count + " рыб\nВ него помещается максимум " + MaxCountFish + " рыб\nПосле " +
                 "каждого действия рыбка стареет на " + oldSpeed + " жизнь");
 
-            foreach (var fish in _fishs)
+            foreach (var fish in _pisces)
             {
-                int numberFish = _fishs.IndexOf(fish) + 1;
+                int numberFish = _pisces.IndexOf(fish) + 1;
                 Console.Write("Рыба № " + numberFish + " - ");
                 fish.ShowLife();
                 Console.WriteLine();
@@ -108,7 +108,7 @@ namespace lesson
 
         public void GetFishsOld(int oldSpeed)
         {
-            foreach (var fish in _fishs)
+            foreach (var fish in _pisces)
             {
                 fish.GetOld(oldSpeed);
             }
@@ -122,7 +122,7 @@ namespace lesson
 
             for (int i = 0; i < countFishs; i++)
             {
-                _fishs.Add(CreateFish());
+                _pisces.Add(CreateFish());
             }
         }
 
