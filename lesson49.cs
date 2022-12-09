@@ -18,34 +18,34 @@ namespace lesson
 
 class Battlefield
 {
-    private List<Soldier> _usaSoldiers = new List<Soldier>();
-    private List<Soldier> _rusSoldiers = new List<Soldier>();
+    private List<Soldier> _leftSoldiers = new List<Soldier>();
+    private List<Soldier> _rightSoldiers = new List<Soldier>();
     private Random _random = new Random();
 
     public void Battle()
     {
         Detachment detachment = new Detachment();
-        _rusSoldiers = detachment.Create();
-        _usaSoldiers = detachment.Create();
-        Console.WriteLine("Состав 1 взвода(" + _rusSoldiers.Count + " чел.): ");
-        ShowCommand(_rusSoldiers);
-        Console.WriteLine("\nСостав 2 взвода(" + _usaSoldiers.Count + " чел.): ");
-        ShowCommand(_usaSoldiers);
+        _rightSoldiers = detachment.Create();
+        _leftSoldiers = detachment.Create();
+        Console.WriteLine("Состав 1 взвода(" + _rightSoldiers.Count + " чел.): ");
+        ShowCommand(_rightSoldiers);
+        Console.WriteLine("\nСостав 2 взвода(" + _leftSoldiers.Count + " чел.): ");
+        ShowCommand(_leftSoldiers);
 
-        while (_usaSoldiers.Count > 0 && _rusSoldiers.Count > 0)
+        while (_leftSoldiers.Count > 0 && _rightSoldiers.Count > 0)
         {
             Fight();
         }
 
-        if (_usaSoldiers.Count > 0)
+        if (_leftSoldiers.Count > 0)
         {
-            Console.WriteLine("\nПобедил 2 взвод, из осталось " + _usaSoldiers.Count + " человек.");
+            Console.WriteLine("\nПобедил 2 взвод, из осталось " + _leftSoldiers.Count + " человек.");
         }
-        else if (_rusSoldiers.Count > 0)
+        else if (_rightSoldiers.Count > 0)
         {
-            Console.WriteLine("\nПобедил 1 взвод, из осталось " + _rusSoldiers.Count + " человек.");
+            Console.WriteLine("\nПобедил 1 взвод, из осталось " + _rightSoldiers.Count + " человек.");
         }
-        else if (_rusSoldiers.Count > 0 && _usaSoldiers.Count > 0)
+        else if (_rightSoldiers.Count > 0 && _leftSoldiers.Count > 0)
         {
             Console.WriteLine("Ничья, победил дружба, братья");
         }
@@ -53,10 +53,10 @@ class Battlefield
 
     private void Fight()
     {
-        int numberSoldierUSA = _random.Next(0, _usaSoldiers.Count);
-        int numberSoldierRus = _random.Next(0, _rusSoldiers.Count);
-        Soldier usaSoldier = _usaSoldiers[numberSoldierUSA];
-        Soldier rusSoldier = _rusSoldiers[numberSoldierRus];
+        int numberSoldierUSA = _random.Next(0, _leftSoldiers.Count);
+        int numberSoldierRus = _random.Next(0, _rightSoldiers.Count);
+        Soldier usaSoldier = _leftSoldiers[numberSoldierUSA];
+        Soldier rusSoldier = _rightSoldiers[numberSoldierRus];
 
         while (usaSoldier.Health > 0 && rusSoldier.Health > 0)
         {
@@ -66,11 +66,11 @@ class Battlefield
 
         if (usaSoldier.Health <= 0)
         {
-            _usaSoldiers.RemoveAt(numberSoldierUSA);
+            _leftSoldiers.RemoveAt(numberSoldierUSA);
         }
         else if (rusSoldier.Health <= 0)
         {
-            _rusSoldiers.RemoveAt(numberSoldierRus);
+            _rightSoldiers.RemoveAt(numberSoldierRus);
         }
     }
 
@@ -85,14 +85,14 @@ class Battlefield
 
 class Detachment
 {
-    private string _squaddie = "рядовой";
-    private string _sergeant = "сержант";
-    private string _officer = "офицер";
     private Random _random = new Random();
-    
+
     public List<Soldier> Create()
     {
         List<Soldier> _soldiers = new List<Soldier>();
+        string squaddie = "рядовой";
+        string sergeant = "сержант";
+        string officer = "офицер";
         int minCountOfficer = 1;
         int maxCountOfficer = 4;
         int minCountSergeant = 2;
@@ -102,9 +102,9 @@ class Detachment
         int countOfficer = _random.Next(minCountOfficer, maxCountOfficer);
         int countSergeant = _random.Next(minCountSergeant, maxCountSergeant);
         int countSoldier = _random.Next(minCountSoldiers, maxCountSoldier);
-        CompetePlatoon(countOfficer, _officer, _soldiers);
-        CompetePlatoon(countSergeant, _sergeant, _soldiers);
-        CompetePlatoon(countSoldier, _squaddie, _soldiers);
+        CompetePlatoon(countOfficer, officer, _soldiers);
+        CompetePlatoon(countSergeant, sergeant, _soldiers);
+        CompetePlatoon(countSoldier, squaddie, _soldiers);
         return _soldiers;
     }
 
@@ -118,6 +118,8 @@ class Detachment
 
     private Soldier Create(string rank)
     {
+        string sergeant = "сержант";
+        string officer = "офицер";
         int minHealth = 50;
         int maxHealth = 101;
         int minDamage = 20;
@@ -130,18 +132,12 @@ class Detachment
         int health = _random.Next(minHealth, maxHealth);
         int damage = _random.Next(minDamage, maxDamage);
 
-        if (rank == _squaddie)
+        if (rank == sergeant)
         {
-            rank = _squaddie;
-        }
-        else if (rank == _sergeant)
-        {
-            rank = _sergeant;
             health += rankBonus * sergeantRankFactor;
         }
-        else if (rank == _officer)
+        else if (rank == officer)
         {
-            rank = _officer;
             health += rankBonus * officerRankBonus;
         }
 
