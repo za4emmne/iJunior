@@ -10,12 +10,12 @@ namespace lesson
     {
         static void Main(string[] args)
         {
-            bool isExit = false;
-            int maxCountFish = 15;
-            int oldSpeed = 1;
             const string CommandAddFish = "1";
             const string CommandRemoveFish = "2";
             const string CommandExit = "q";
+            bool isExit = false;
+            int maxCountFish = 15;
+            int oldSpeed = 1;
             Aquarium aquarium = new Aquarium(maxCountFish);
 
             while (isExit == false)
@@ -38,8 +38,8 @@ namespace lesson
                         break;
                 }
 
-                aquarium.GetOldFish(oldSpeed);
-                aquarium.DieFish();
+                aquarium.GetOldFishes(oldSpeed);
+                aquarium.RemoveDeadFishes();
                 Console.Clear();
             }
         }
@@ -56,7 +56,7 @@ namespace lesson
             CreateFishs();
         }
 
-        public void DieFish()
+        public void RemoveDeadFishes()
         {
             for (int i = 0; i < _fishes.Count; i++)
             {
@@ -114,7 +114,7 @@ namespace lesson
             }
         }
 
-        public void GetOldFish(int oldSpeed)
+        public void GetOldFishes(int oldSpeed)
         {
             foreach (var fish in _fishes)
             {
@@ -139,8 +139,7 @@ namespace lesson
             int minFishLife = 3;
             int maxFishLife = 11;
             int fishLife = _random.Next(minFishLife, maxFishLife);
-            Fish fish = new Fish(fishLife);
-            return fish;
+            return new Fish(fishLife);
         }
     }
 
