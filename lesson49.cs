@@ -18,34 +18,31 @@ namespace lesson
 
 class Battlefield
 {
-    private List<Soldier> _leftSoldiers = new List<Soldier>();
-    private List<Soldier> _rightSoldiers = new List<Soldier>();
+    private Detachment _leftDetachment = new Detachment();
+    private Detachment _rightDetachment = new Detachment();
     private Random _random = new Random();
 
     public void Battle()
     {
-        Detachment detachment = new Detachment();
-        _rightSoldiers = detachment.Create();
-        _leftSoldiers = detachment.Create();
-        Console.WriteLine("Состав 1 взвода(" + _rightSoldiers.Count + " чел.): ");
-        ShowCommand(_rightSoldiers);
-        Console.WriteLine("\nСостав 2 взвода(" + _leftSoldiers.Count + " чел.): ");
-        ShowCommand(_leftSoldiers);
+        Console.WriteLine("Состав 1 взвода(" + _rightDetachment.GetSoldiersCount() + " чел.): ");
+        _rightDetachment.ShowCommand();
+        Console.WriteLine("\nСостав 2 взвода(" + _leftDetachment.GetSoldiersCount() + " чел.): ");
+        _leftDetachment.ShowCommand();
 
-        while (_leftSoldiers.Count > 0 && _rightSoldiers.Count > 0)
+        while (_leftDetachment.GetSoldiersCount() > 0 && _rightDetachment.GetSoldiersCount() > 0)
         {
             Fight();
         }
 
-        if (_leftSoldiers.Count > 0)
+        if (_leftDetachment.GetSoldiersCount() > 0)
         {
-            Console.WriteLine("\nПобедил 2 взвод, из осталось " + _leftSoldiers.Count + " человек.");
+            Console.WriteLine("\nПобедил 2 взвод, их осталось " + _leftDetachment.GetSoldiersCount() + " человек.");
         }
-        else if (_rightSoldiers.Count > 0)
+        else if (_rightDetachment.GetSoldiersCount() > 0)
         {
-            Console.WriteLine("\nПобедил 1 взвод, из осталось " + _rightSoldiers.Count + " человек.");
+            Console.WriteLine("\nПобедил 1 взвод, их осталось " + _rightDetachment.GetSoldiersCount() + " человек.");
         }
-        else if (_rightSoldiers.Count > 0 && _leftSoldiers.Count > 0)
+        else if (_rightDetachment.GetSoldiersCount() > 0 && _leftDetachment.GetSoldiersCount() > 0)
         {
             Console.WriteLine("Ничья, победил дружба, братья");
         }
@@ -53,32 +50,24 @@ class Battlefield
 
     private void Fight()
     {
-        int numberSoldierUSA = _random.Next(0, _leftSoldiers.Count);
-        int numberSoldierRus = _random.Next(0, _rightSoldiers.Count);
-        Soldier usaSoldier = _leftSoldiers[numberSoldierUSA];
-        Soldier rusSoldier = _rightSoldiers[numberSoldierRus];
+        int numberSoldierLeft = _random.Next(0, _leftDetachment.GetSoldiersCount());
+        int numberSoldierRight = _random.Next(0, _rightDetachment.GetSoldiersCount());
+        Soldier leftSoldier = _leftDetachment.GetRandomSoldier(numberSoldierLeft);
+        Soldier rightSoldier = _rightDetachment.GetRandomSoldier(numberSoldierRight);
 
-        while (usaSoldier.Health > 0 && rusSoldier.Health > 0)
+        while (leftSoldier.Health > 0 && rightSoldier.Health > 0)
         {
-            rusSoldier.TakeDamage(usaSoldier.Damage);
-            usaSoldier.TakeDamage(rusSoldier.Damage);
+            rightSoldier.TakeDamage(leftSoldier.Damage);
+            leftSoldier.TakeDamage(rightSoldier.Damage);
         }
 
-        if (usaSoldier.Health <= 0)
+        if (leftSoldier.Health <= 0)
         {
-            _leftSoldiers.RemoveAt(numberSoldierUSA);
+            _leftDetachment.RemoveDeadSoldier(numberSoldierLeft);
         }
-        else if (rusSoldier.Health <= 0)
+        else if (rightSoldier.Health <= 0)
         {
-            _rightSoldiers.RemoveAt(numberSoldierRus);
-        }
-    }
-
-    private void ShowCommand(List<Soldier> soldiers)
-    {
-        foreach (var soldier in soldiers)
-        {
-            soldier.ShowStats();
+            _rightDetachment.RemoveDeadSoldier(numberSoldierRight);
         }
     }
 }
@@ -86,10 +75,38 @@ class Battlefield
 class Detachment
 {
     private Random _random = new Random();
+    private List<Soldier> _soldiers = new List<Soldier>();
 
-    public List<Soldier> Create()
+    public Detachment()
     {
-        List<Soldier> _soldiers = new List<Soldier>();
+        Create();
+    }
+
+    public void RemoveDeadSoldier(int numberSoldier)
+    {
+        _soldiers.RemoveAt(numberSoldier);
+    }
+
+    public Soldier GetRandomSoldier(int randomNumber)
+    {
+        return _soldiers[randomNumber];
+    }
+
+    public int GetSoldiersCount()
+    {
+        return _soldiers.Count;
+    }
+
+    public void ShowCommand()
+    {
+        foreach (var soldier in _soldiers)
+        {
+            soldier.ShowStats();
+        }
+    }
+
+    private List<Soldier> Create()
+    {
         string squaddie = "рядовой";
         string sergeant = "сержант";
         string officer = "офицер";
