@@ -20,7 +20,7 @@ namespace lesson
 
                 Console.WriteLine($"Добро пожаловать в зоопарк\nЗдесь вы увидите: ");
                 zoo.ShowAviares();
-                Console.Write("\nНажмите 1, чтобы выбрать вольер\nНажмите 0, чтобы выйти из программы\n\nВведите команду: ");
+                Console.Write($"\nНажмите {CommandChooseAviary}, чтобы выбрать вольер\nНажмите {CommandExit}, чтобы выйти из программы\n\nВведите команду: ");
                 string playerChoose = Console.ReadLine();
 
                 switch (playerChoose)
@@ -70,15 +70,22 @@ namespace lesson
             string playerChoose = Console.ReadLine();
             Console.Clear();
 
-            if(int.TryParse(playerChoose, out int numberAviary) && numberAviary>0 && numberAviary<=_aviaries.Count)
+            if (int.TryParse(playerChoose, out int numberAviary))
             {
-                _aviaries[numberAviary].ShowInfo();
-                Console.WriteLine();
-                _aviaries[numberAviary].ShowAnimalInAviary();
+                if (numberAviary > 0 && numberAviary <= _aviaries.Count)
+                {
+                    _aviaries[numberAviary].ShowInfo();
+                    Console.WriteLine();
+                    _aviaries[numberAviary].ShowAnimal();
+                }
+                else
+                {
+                    Console.WriteLine("Такого вольера не существует..");
+                }
             }
             else
             {
-                Console.WriteLine("Такого вольера не существует..");
+                Console.WriteLine("Введите число");
             }
 
             Console.Write("Чтобы выйти в меню, нажмите любую клавишу..");
@@ -86,7 +93,7 @@ namespace lesson
             Console.Clear();
         }
 
-        private int RandomAnimalCount()
+        private int SetRandomAnimalCount()
         {
             int minCountAnimals = 2;
             int maxCountAnimals = 10;
@@ -96,10 +103,10 @@ namespace lesson
 
         private void CreateAviares()
         {
-            _aviaries.Add(new Aviary<Horse>(animalCount: RandomAnimalCount(), name: "Вольер с лошадьми"));
-            _aviaries.Add(new Aviary<Monkey>(animalCount: RandomAnimalCount(), name: "Вольер с медведями"));
-            _aviaries.Add(new Aviary<Monkey>(animalCount: RandomAnimalCount(), name: "Вольер с медведями"));
-            _aviaries.Add(new Aviary<Monkey>(animalCount: RandomAnimalCount(), name: "Вольер с медведями"));
+            _aviaries.Add(new Aviary<Horse>(animalCount: SetRandomAnimalCount(), name: "Вольер с лошадьми"));
+            _aviaries.Add(new Aviary<Monkey>(animalCount: SetRandomAnimalCount(), name: "Вольер с медведями"));
+            _aviaries.Add(new Aviary<Monkey>(animalCount: SetRandomAnimalCount(), name: "Вольер с медведями"));
+            _aviaries.Add(new Aviary<Monkey>(animalCount: SetRandomAnimalCount(), name: "Вольер с медведями"));
         }
     }
 
@@ -112,10 +119,10 @@ namespace lesson
         {
             Name = name;
             _animals = new List<AnimalKind>();
-            AddAnimal(animalCount);
+            AddAnimals(animalCount);
         }
 
-        public void AddAnimal(int animalCount)
+        public void AddAnimals(int animalCount)
         {
             for (int i = 0; i < animalCount; i++)
             {
@@ -123,7 +130,7 @@ namespace lesson
             }
         }
 
-        public void ShowAnimalInAviary()
+        public void ShowAnimal()
         {
             foreach (var animal in _animals)
             {
@@ -139,49 +146,22 @@ namespace lesson
 
     abstract class Animal
     {
-        protected string name;
-        protected const string MaleGender = "Самец";
-        protected const string FemaleGender = "Самка";
-        protected Gender gender;
+        protected string Name;
         private Random _random = new Random();
-
-        public Animal()
-        {
-            MakeGender();
-        }
-
-        public enum Gender
-        {
-            Male,
-            Female
-        }
+        private string[] _gender = new string[] { "Самец", "Самка" };
 
         public abstract void ShowVoice();
 
         public virtual void ShowInfo()
         {
-            Console.Write($"Это {name}, пол: {GetGender()}, издает звук - ");
+            Console.Write($"Это {Name}, пол: {MakeRandomGender()}, издает звук - ");
             ShowVoice();
         }
 
-        protected string GetGender()
+        protected string MakeRandomGender()
         {
-            switch (gender)
-            {
-                case Gender.Male:
-                    return MaleGender;
-
-                case Gender.Female:
-                    return FemaleGender;
-
-                default:
-                    return string.Empty;
-            }
-        }
-
-        private void MakeGender()
-        {
-            gender = (Gender)_random.Next((int)Gender.Male, (int)Gender.Female + 1);
+            int randomNumberGender = _random.Next(0,2);
+            return _gender[randomNumberGender];
         }
     }
 
@@ -189,7 +169,7 @@ namespace lesson
     {
         public Horse()
         {
-            name = "Лошадь";
+            Name = "Лошадь";
         }
 
         public override void ShowInfo()
@@ -207,7 +187,7 @@ namespace lesson
     {
         public Bear()
         {
-            name = "Медведь";
+            Name = "Медведь";
         }
 
         public override void ShowInfo()
@@ -225,7 +205,7 @@ namespace lesson
     {
         public Monkey()
         {
-            name = "Обезьяна";
+            Name = "Обезьяна";
         }
 
         public override void ShowInfo()
@@ -243,7 +223,7 @@ namespace lesson
     {
         public Pig()
         {
-            name = "Свинья";
+            Name = "Свинья";
         }
 
         public override void ShowInfo()
@@ -259,7 +239,7 @@ namespace lesson
 
     public interface IAviary
     {
-        public void ShowAnimalInAviary();
+        public void ShowAnimal();
         public void ShowInfo();
     }
 }
