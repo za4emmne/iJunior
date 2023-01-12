@@ -69,6 +69,7 @@ namespace lesson
             Console.Write("Введите национальность преступника: ");
             string inputNationality = Console.ReadLine();
             filteredCriminals = _criminals.Where(criminal => criminal.Nationality == inputNationality).Select(criminal => criminal);
+            filteredCriminals = _criminals.Where(criminal => criminal.IsPrisoner == false).Select(criminal => criminal);
             Console.Clear();
             Console.WriteLine($"Список преступников по вашему запросу:  Рост - {inputGrowth}, Вес - {inputWeith}," +
                 $" Национальность - {inputNationality}");
