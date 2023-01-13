@@ -74,9 +74,9 @@ namespace lesson
             {
                 if (numberAviary > 0 && numberAviary <= _aviaries.Count)
                 {
-                    _aviaries[numberAviary].ShowInfo();
+                    _aviaries[numberAviary-1].ShowInfo();
                     Console.WriteLine();
-                    _aviaries[numberAviary].ShowAnimal();
+                    _aviaries[numberAviary-1].ShowAnimal();
                 }
                 else
                 {
@@ -93,36 +93,35 @@ namespace lesson
             Console.Clear();
         }
 
-        private int SetRandomAnimalCount()
+        private int CreateRandomAnimalCount()
         {
             int minCountAnimals = 2;
             int maxCountAnimals = 10;
-            int countAnimals = _random.Next(minCountAnimals, maxCountAnimals);
-            return countAnimals;
+            return _random.Next(minCountAnimals, maxCountAnimals);
         }
 
         private void CreateAviares()
         {
-            _aviaries.Add(new Aviary<Horse>(animalCount: SetRandomAnimalCount(), name: "Вольер с лошадьми"));
-            _aviaries.Add(new Aviary<Monkey>(animalCount: SetRandomAnimalCount(), name: "Вольер с медведями"));
-            _aviaries.Add(new Aviary<Monkey>(animalCount: SetRandomAnimalCount(), name: "Вольер с медведями"));
-            _aviaries.Add(new Aviary<Monkey>(animalCount: SetRandomAnimalCount(), name: "Вольер с медведями"));
+            _aviaries.Add(new Aviary<Horse>(animalCount: CreateRandomAnimalCount(), name: "Вольер с лошадьми"));
+            _aviaries.Add(new Aviary<Monkey>(animalCount: CreateRandomAnimalCount(), name: "Вольер с медведями"));
+            _aviaries.Add(new Aviary<Monkey>(animalCount: CreateRandomAnimalCount(), name: "Вольер с медведями"));
+            _aviaries.Add(new Aviary<Monkey>(animalCount: CreateRandomAnimalCount(), name: "Вольер с медведями"));
         }
     }
 
     class Aviary<AnimalKind> : IAviary where AnimalKind : Animal, new()
     {
         private List<AnimalKind> _animals;
-        private string Name;
+        private string _name;
 
         public Aviary(string name, int animalCount)
         {
-            Name = name;
+            _name = name;
             _animals = new List<AnimalKind>();
             AddAnimals(animalCount);
         }
 
-        public void AddAnimals(int animalCount)
+        private void AddAnimals(int animalCount)
         {
             for (int i = 0; i < animalCount; i++)
             {
@@ -140,7 +139,7 @@ namespace lesson
 
         public void ShowInfo()
         {
-            Console.WriteLine($"{Name}, его численность составляет {_animals.Count} животных");
+            Console.WriteLine($"{_name}, его численность составляет {_animals.Count} животных");
         }
     }
 
@@ -148,7 +147,6 @@ namespace lesson
     {
         protected string Name;
         private Random _random = new Random();
-        private string[] _gender = new string[] { "Самец", "Самка" };
 
         public abstract void ShowVoice();
 
@@ -160,7 +158,8 @@ namespace lesson
 
         protected string MakeRandomGender()
         {
-            int randomNumberGender = _random.Next(0,2);
+            string[] _gender = new string[] { "Самец", "Самка" };
+            int randomNumberGender = _random.Next(0, _gender.Length);
             return _gender[randomNumberGender];
         }
     }
@@ -170,11 +169,6 @@ namespace lesson
         public Horse()
         {
             Name = "Лошадь";
-        }
-
-        public override void ShowInfo()
-        {
-            base.ShowInfo();
         }
 
         public override void ShowVoice()
@@ -190,11 +184,6 @@ namespace lesson
             Name = "Медведь";
         }
 
-        public override void ShowInfo()
-        {
-            base.ShowInfo();
-        }
-
         public override void ShowVoice()
         {
             Console.WriteLine("ААААААААааааАААррррррррр");
@@ -208,11 +197,6 @@ namespace lesson
             Name = "Обезьяна";
         }
 
-        public override void ShowInfo()
-        {
-            base.ShowInfo();
-        }
-
         public override void ShowVoice()
         {
             Console.WriteLine("УаааУааааа-а-а");
@@ -224,11 +208,6 @@ namespace lesson
         public Pig()
         {
             Name = "Свинья";
-        }
-
-        public override void ShowInfo()
-        {
-            base.ShowInfo();
         }
 
         public override void ShowVoice()
