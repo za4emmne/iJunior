@@ -29,7 +29,7 @@ namespace lesson
             Console.WriteLine("Добрый день, сегодня вы сможете наблюдать величайшее событие в нашей стране\n" +
                     "Сегодня пройдет амнистия заключенных, осужденных за Антиправительственные преступления");
             Console.WriteLine($"Список всех заключенных:");
-            ShowAllPrisoners();
+            ShowPrisoners();
             Console.WriteLine($"\nНАЖМИТЕ ЛЮУБУЮ КЛАВИШУ, ЧТОБЫ ПОРВЕСТИ АМНИСТИЮ");
             Console.ReadKey();
             Console.Clear();
@@ -40,24 +40,17 @@ namespace lesson
             Console.WriteLine("Делаем добрые дела..");
             System.Threading.Thread.Sleep(1000);
             DoAmnesty();
-            }
-       
+        }
+
         private void DoAmnesty()
         {
             const string PoliticCrime = "Антиправительственное";
 
-            int number = 1;
-            var notAmnestedPrisoners = _prisoners.Where(prisoner => prisoner.Crime != PoliticCrime);
+            var notAmnistedPrisoners = _prisoners.Where(prisoner => prisoner.Crime != PoliticCrime);
+            _prisoners = notAmnistedPrisoners.ToList();
             Console.Clear();
             Console.WriteLine($"Список преступников после амнистии:");
-
-            foreach (var prisoner in notAmnestedPrisoners)
-            {
-                Console.Write(number + ". ");
-                prisoner.ShowInfo();
-                number++;
-            }
-
+            ShowPrisoners();
             Console.ReadKey();
             Console.Clear();
         }
@@ -71,7 +64,7 @@ namespace lesson
             _prisoners.Add(new Prisoner("Бируев Кикбас Нусеевич", "Воровство"));
         }
 
-        private void ShowAllPrisoners()
+        private void ShowPrisoners()
         {
             int number = 1;
 
