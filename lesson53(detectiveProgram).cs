@@ -143,7 +143,7 @@ namespace lesson
 
         public void ShowInfo()
         {
-            Console.WriteLine($"Имя - {Name}  Рост - {Growth} Вес - {Weith}  Национальность - {Nationality}:  ");
+            Console.Write($"Имя - {Name}  Рост - {Growth} Вес - {Weith}  Национальность - {Nationality}:  ");
 
             if (IsPrisoner)
             {
