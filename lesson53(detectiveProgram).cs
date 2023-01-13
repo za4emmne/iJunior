@@ -61,15 +61,13 @@ namespace lesson
         private void FilteredCriminal()
         {
             Console.Write("Введите рост преступника: ");
-            InputIsNumber(out int inputGrowth);
-            var filteredCriminals = _criminals.Where(criminal => criminal.Growth == inputGrowth);
+            InputIsNumber(out int inputGrowth);           
             Console.Write("Введите вес преступника: ");
             InputIsNumber(out int inputWeith);
-            filteredCriminals = filteredCriminals.Where(criminal => criminal.Weith == inputWeith);
             Console.Write("Введите национальность преступника: ");
             string inputNationality = Console.ReadLine();
-            filteredCriminals = filteredCriminals.Where(criminal => criminal.Nationality == inputNationality);
-            filteredCriminals = filteredCriminals.Where(criminal => criminal.IsPrisoner == false);
+            var filteredCriminals = _criminals.Where(criminal => criminal.Growth == inputGrowth && criminal.Weith == inputWeith && 
+            criminal.Nationality == inputNationality && criminal.IsPrisoner == false);
             Console.Clear();
             Console.WriteLine($"Список преступников по вашему запросу:  Рост - {inputGrowth}, Вес - {inputWeith}," +
                 $" Национальность - {inputNationality}");
