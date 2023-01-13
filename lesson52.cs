@@ -11,32 +11,33 @@ namespace lesson
         static void Main(string[] args)
         {
             CarService carService = new CarService();
-            carService.Menu();
+            carService.StartWork();
         }
     }
 
     class CarService
     {
         private int _balance = 1000000;
-        private List<SpareParts> _spares = new List<SpareParts>();
+        private List<Cell> _cells = new List<Cell>();
         private int _priceWork = 3000;
         private int _fine = 5000;
 
         public CarService()
         {
-            FillZip();
+            FillCells();
         }
 
-        public void Menu()
+        public void StartWork()
         {
             bool isExit = false;
 
             while (isExit == false)
             {
-                Client client = new Client();
                 const string CommandShowPrices = "1";
                 const string CommandFixCar = "2";
                 const string CommandExit = "0";
+
+                Client client = new Client();
                 Console.WriteLine("Добро пожаловать в автосервис КАЛИНА-МАЛИНА\nВыберите пункт меню:");
                 Console.WriteLine($"НАЖМИТЕ {CommandShowPrices} - Цена и наличие комплектующих\nНАЖМИТЕ {CommandFixCar} - Провести диагностику " +
                     $"и починить машину\nНАЖМИТЕ {CommandExit} - ВЫЙТИ");
@@ -49,7 +50,7 @@ namespace lesson
                         ShowSpareParts();
                         break;
                     case CommandFixCar:
-                        DiagnoseCar(client);
+                        RepairCar(client);
                         break;
                     case CommandExit:
                         isExit = true;
@@ -58,7 +59,22 @@ namespace lesson
             }
         }
 
-        private void DiagnoseCar(Client client)
+        public void ShowSpareParts()
+        {
+            Console.Clear();
+            Console.WriteLine("У нас на складе есть следующие комплектующие для автомобиля:\n");
+
+            foreach (var cell in _cells)
+            {
+                cell.ShowInfo();
+            }
+
+            Console.WriteLine("\nНажмите любую клавишу длявыхода в меню..");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        private void RepairCar(Client client)
         {
             Console.Clear();
             Console.WriteLine("Посмотрим, что тут у вас..");
@@ -68,36 +84,35 @@ namespace lesson
             Console.WriteLine("Смотрим..");
             System.Threading.Thread.Sleep(1000);
 
-            foreach (var spare in _spares)
+            foreach (var cell in _cells)
             {
-                if (spare.Part == client.brokenDetail)
+                if (cell.Part == client.BrokenDetail)
                 {
-                    Console.WriteLine($"У вас сломан следующий узел: {spare.Name}");
-                    FixCar(spare, client);
+                    Console.WriteLine($"У вас сломан следующий узел: {cell.Name}");
+                    Troubleshoot(cell, client);
+                    break;
                 }
             }
 
             Console.Clear();
         }
 
-        private void FixCar(SpareParts spare, Client client)
+        private void Troubleshoot(Cell cell, Client client)
         {
-            if (spare.CountDetails > 0)
+            if (cell.CountDetails > 0)
             {
                 const string CommandFixCar = "1";
-                const string CommandExit = "0";
-                int totalPrice = spare.PriceDetail + _priceWork;
+                int totalPrice = cell.PriceDetail + _priceWork;
                 Console.WriteLine($"\nОтлично, комплектующие есть в наличии, цена услуги составит: {totalPrice} руб.");
-
-                Console.Write($"Нажмите {CommandFixCar}, чтобы расплатиться и починить машину\nНажмите {CommandExit}, чтобы выйти\n\nВаш ввод: ");
+                Console.Write($"Нажмите {CommandFixCar}, чтобы расплатиться и починить машину\nНажмите любую клавишу, чтобы выйти\n\nВаш ввод: ");
                 string playerInput = Console.ReadLine();
 
                 switch (playerInput)
                 {
                     case CommandFixCar:
-                        ReplaceDetail(spare, totalPrice, client);
+                        ReplaceDetail(cell, totalPrice, client);
                         break;
-                    case CommandExit:
+                    default:
                         break;
                 }
             }
@@ -115,16 +130,16 @@ namespace lesson
             }
         }
 
-        private void ReplaceDetail(SpareParts spare, int totalPrice, Client client)
+        private void ReplaceDetail(Cell cell, int totalPrice, Client client)
         {
-            if (client.isPayOff(totalPrice))
+            if (client.IsPayOff(totalPrice))
             {
                 _balance += totalPrice;
-                spare.RemoveDetail();
+                cell.RemoveDetail();
 
-                if (spare.CountDetails == 0)
+                if (cell.CountDetails == 0)
                 {
-                    _spares.Remove(spare);
+                    _cells.Remove(cell);
                 }
 
                 Console.WriteLine("Машина починина, езжайте с Богом..");
@@ -135,45 +150,30 @@ namespace lesson
             }
         }
 
-        private void FillZip()
+        private void FillCells()
         {
-            _spares.Add(new SpareParts(Part.GRM, "Ремень ГРМ", 5, new GRM()));
-            _spares.Add(new SpareParts(Part.Wheel, "Колесо", 11, new Wheel()));
-            _spares.Add(new SpareParts(Part.SparkPlug, "Свечи зажигания", 30, new SparkPlug()));
-            _spares.Add(new SpareParts(Part.WindShield, "Лобовое стекло", 9, new WindShield()));
-        }
-
-        public void ShowSpareParts()
-        {
-            Console.Clear();
-            Console.WriteLine("У нас на складе есть следующие комплектующие для автомобиля:\n");
-
-            foreach (var spare in _spares)
-            {
-                spare.ShowInfo();
-            }
-
-            Console.WriteLine("\nНажмите любую клавишу длявыхода в меню..");
-            Console.ReadKey();
-            Console.Clear();
+            _cells.Add(new Cell(Part.GRM, "Ремень ГРМ", 5, new GRM()));
+            _cells.Add(new Cell(Part.Wheel, "Колесо", 11, new Wheel()));
+            _cells.Add(new Cell(Part.SparkPlug, "Свечи зажигания", 30, new SparkPlug()));
+            _cells.Add(new Cell(Part.WindShield, "Лобовое стекло", 9, new WindShield()));
         }
     }
 
     class Client
     {
-        public Part brokenDetail { get; private set; }
         private int _money;
         private Random _random = new Random();
+        public Part BrokenDetail { get; private set; }
 
         public Client()
         {
             int minMoney = 1000;
             int maxMoney = 20001;
             _money = _random.Next(minMoney, maxMoney);
-            brokenDetail = GetBrokenDetail();
+            BrokenDetail = GetBrokenDetail();
         }
 
-        public bool isPayOff(int repairPrice)
+        public bool IsPayOff(int repairPrice)
         {
             if (_money > repairPrice)
             {
@@ -190,19 +190,19 @@ namespace lesson
         private Part GetBrokenDetail()
         {
             Part[] spareParts = (Part[])Enum.GetValues(typeof(Part));
-            return brokenDetail = (Part)_random.Next(0, spareParts.Length + 1);
+            return BrokenDetail = (Part)_random.Next(0, spareParts.Length + 1);
         }
     }
 
-    class SpareParts
+    class Cell
     {
+        private List<Detail> _details = new List<Detail>();
         public string Name { get; private set; }
         public int CountDetails { get; private set; }
         public int PriceDetail { get; private set; }
         public Part Part { get; private set; }
-        private List<Detail> _details = new List<Detail>();
 
-        public SpareParts(Part part, string name, int countDetails, Detail detail)
+        public Cell(Part part, string name, int countDetails, Detail detail)
         {
             this.Name = name;
             this.CountDetails = countDetails;
@@ -217,14 +217,16 @@ namespace lesson
 
         public void ShowInfo()
         {
-            Console.WriteLine($"{Name} - {PriceDetail} руб, в наличии {CountDetails} штук");
+            Console.WriteLine($"{Name} - {PriceDetail} руб, в наличии {_details.Count} штук");
         }
 
         public int RemoveDetail()
         {
+            int numberDetail = 1;
+            _details.RemoveAt(numberDetail);
             return CountDetails--;
-        } 
-        
+        }
+
         private void FillParts(Detail detail)
         {
             _details.Add(detail);
