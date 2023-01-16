@@ -40,7 +40,7 @@ namespace lesson
                     $"\nНАЖАВ {CommandFilteredDesease} - Вывести больных с определенным заболеванием\nНАЖАВ {CommandExit} - Выйти");
                 Console.SetCursorPosition(0, 10);
                 Console.WriteLine($"Список всех больных:");
-                ShowAllIlls();
+                ShowInfoAboutIlls(_ills);
                 Console.SetCursorPosition(0, 4);
                 Console.Write("Ваш ввод: ");
                 string userInput = Console.ReadLine();
@@ -49,7 +49,7 @@ namespace lesson
                 {
                     case CommandSortName:
                         SortName();
-                        break;    
+                        break;
                     case CommandSortAge:
                         SortAge();
                         break;
@@ -62,7 +62,7 @@ namespace lesson
                     default:
                         Console.WriteLine("Такой команды нет..");
                         break;
-                } 
+                }
             }
         }
 
@@ -73,17 +73,9 @@ namespace lesson
             string userInput = Console.ReadLine();
             var filteredDeseaseIlls = _ills.Where(ill => ill.Desease.ToUpper() == userInput.ToUpper());
 
-            if(filteredDeseaseIlls.ToList().Count>0)
+            if (filteredDeseaseIlls.ToList().Count > 0)
             {
-                int number = 1;
-
-                foreach (var ill in filteredDeseaseIlls)
-                {
-                    Console.Write(number + ". ");
-                    ill.ShowInfo();
-                    number++;
-                }
-
+                ShowInfoAboutIlls(filteredDeseaseIlls.ToList());
                 Console.ReadKey();
                 Console.Clear();
             }
@@ -97,36 +89,20 @@ namespace lesson
 
         private void SortName()
         {
-            int number = 1;
             var sortNameIlls = _ills.OrderBy(ill => ill.Name);
             Console.Clear();
             Console.WriteLine($"Список больных отсортированных по ФИО");
-
-            foreach (var ill in sortNameIlls)
-            {
-                Console.Write(number + ". ");
-                ill.ShowInfo();
-                number++;
-            }
-
+            ShowInfoAboutIlls(sortNameIlls.ToList());
             Console.ReadKey();
             Console.Clear();
         }
 
         private void SortAge()
-        { 
-            int number = 1;
-            var sortNameIlls = _ills.OrderBy(ill => ill.Age);
+        {
+            var sortAgeIlls = _ills.OrderBy(ill => ill.Age);
             Console.Clear();
             Console.WriteLine($"Список больных отсортированных по возрасту");
-
-            foreach (var ill in sortNameIlls)
-            {
-                Console.Write(number + ". ");
-                ill.ShowInfo();
-                number++;
-            }
-
+            ShowInfoAboutIlls(sortAgeIlls.ToList());
             Console.ReadKey();
             Console.Clear();
         }
@@ -147,14 +123,14 @@ namespace lesson
             _ills.Add(new Ill("Миронова Елизавета Валерьевна", 21, "Перхоть"));
         }
 
-        private void ShowAllIlls()
+        private void ShowInfoAboutIlls(List<Ill> ills)
         {
             int number = 1;
 
-            foreach (var prisoner in _ills)
+            foreach (var ill in ills)
             {
                 Console.Write(number + ". ");
-                prisoner.ShowInfo();
+                ill.ShowInfo();
                 number++;
             }
         }
