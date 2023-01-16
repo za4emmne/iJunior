@@ -107,13 +107,10 @@ namespace lesson
                 Console.Write($"Нажмите {CommandFixCar}, чтобы расплатиться и починить машину\nНажмите любую клавишу, чтобы выйти\n\nВаш ввод: ");
                 string playerInput = Console.ReadLine();
 
-                switch (playerInput)
+                if (playerInput == CommandFixCar)
                 {
-                    case CommandFixCar:
-                        ReplaceDetail(cell, totalPrice, client);
-                        break;
-                    default:
-                        break;
+                    ReplaceDetail(cell, totalPrice, client);
+
                 }
             }
             else
@@ -132,7 +129,7 @@ namespace lesson
 
         private void ReplaceDetail(Cell cell, int totalPrice, Client client)
         {
-            if (client.IsPayOff(totalPrice))
+            if (client.TryPayOff(totalPrice))
             {
                 _balance += totalPrice;
                 cell.RemoveDetail();
@@ -173,7 +170,7 @@ namespace lesson
             BrokenDetail = GetBrokenDetail();
         }
 
-        public bool IsPayOff(int repairPrice)
+        public bool TryPayOff(int repairPrice)
         {
             if (_money > repairPrice)
             {
@@ -204,8 +201,8 @@ namespace lesson
 
         public Cell(Part part, string name, int countDetails, Detail detail)
         {
-            this.Name = name;
-            this.CountDetails = countDetails;
+            Name = name;
+            CountDetails = countDetails;
             Part = part;
             PriceDetail = detail.GetPrice();
 
@@ -222,8 +219,7 @@ namespace lesson
 
         public int RemoveDetail()
         {
-            int numberDetail = 1;
-            _details.RemoveAt(numberDetail);
+            _details.RemoveAt(0);
             return CountDetails--;
         }
 
@@ -237,8 +233,8 @@ namespace lesson
     {
         public WindShield()
         {
-            name = "Лобовое стекло";
-            price = 8000;
+            Name = "Лобовое стекло";
+            Price = 8000;
         }
     }
 
@@ -246,8 +242,8 @@ namespace lesson
     {
         public SparkPlug()
         {
-            name = "Свечи зажигания";
-            price = 500;
+            Name = "Свечи зажигания";
+            Price = 500;
         }
     }
 
@@ -255,8 +251,8 @@ namespace lesson
     {
         public Wheel()
         {
-            name = "Руль";
-            price = 4000;
+            Name = "Руль";
+            Price = 4000;
         }
     }
 
@@ -264,24 +260,24 @@ namespace lesson
     {
         public GRM()
         {
-            name = "Ремень ГРМ";
-            price = 6000;
+            Name = "Ремень ГРМ";
+            Price = 6000;
         }
     }
 
     class Detail
     {
-        protected string name;
-        protected int price;
+        protected string Name;
+        protected int Price;
 
         public virtual void ShowInfo()
         {
-            Console.WriteLine($"Деталь: {name}, цена: {price} дереянных");
+            Console.WriteLine($"Деталь: {Name}, цена: {Price} дереянных");
         }
 
         public virtual int GetPrice()
         {
-            return price;
+            return Price;
         }
     }
 
