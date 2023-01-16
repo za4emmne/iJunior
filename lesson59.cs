@@ -28,19 +28,31 @@ namespace lesson
 
         public void Start()
         {
-            Console.WriteLine("Здрасти, здесь можно перевести из синего взвода в красный тех солдат, чьи фамилии начинаются на букву Б\n");
+            char nameStartWithChar = 'Б';
+            Console.WriteLine("Здрасти, здесь можно перевести из синего взвода в красный тех солдат, чьи фамилии начинаются на букву " + nameStartWithChar + "\n");
             Console.WriteLine("Солдаты синего взвода:");
             ShowInfoAboutAllSolsiers(_soldiersBlueCrew);
             Console.WriteLine();
             Console.WriteLine("Солдаты красного взвода:");
             ShowInfoAboutAllSolsiers(_soldiersRedCrew);
+
+            MoveSoldiers(nameStartWithChar);
+
+            Console.WriteLine("Солдаты красного взвода после перевода: ");
+            ShowInfoAboutAllSolsiers(_soldiersRedCrew);
+            Console.WriteLine();
+            Console.WriteLine("Солдаты синего взвода после перевода: ");
+            ShowInfoAboutAllSolsiers(_soldiersBlueCrew);
+        }
+
+        private void MoveSoldiers(char inputChar)
+        {
             Console.WriteLine("\nНажмите любую кнопку, чтобы перевести солдат..");
             Console.ReadKey();
-            var soldiersSurnameB = _soldiersBlueCrew.Where(soldier => soldier.Surname.StartsWith('Б'));
-            var unitedSoldiers = _soldiersRedCrew.Union(soldiersSurnameB);
-            _soldiersRedCrew = unitedSoldiers.ToList();
+            var soldiersSurnameStartWithChar = _soldiersBlueCrew.Where(soldier => soldier.Surname.StartsWith(inputChar));
+            _soldiersBlueCrew = _soldiersBlueCrew.Except(soldiersSurnameStartWithChar).ToList();
+            _soldiersRedCrew = _soldiersRedCrew.Concat(soldiersSurnameStartWithChar.ToList()).ToList();
             Console.Clear();
-            ShowInfoAboutAllSolsiers(_soldiersRedCrew);
         }
 
         private void FillBlueCrew()
@@ -69,9 +81,13 @@ namespace lesson
 
         private void ShowInfoAboutAllSolsiers(List<Soldier> soldiers)
         {
+            int number = 1;
+
             foreach (var soldier in soldiers)
             {
+                Console.Write(number + ". ");
                 soldier.ShowInfo();
+                number++;
             }
         }
     }
