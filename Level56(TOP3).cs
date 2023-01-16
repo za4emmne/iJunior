@@ -18,6 +18,7 @@ namespace lesson
     class RatingProgram
     {
         private List<Player> _players = new List<Player>();
+        private int _numberTop = 3;
 
         public RatingProgram()
         {
@@ -50,7 +51,7 @@ namespace lesson
                         SortPlayerDamage();
                         break;
                     case CommandShowAllPlayers:
-                        ShowInfoAboutAllPlayers();
+                        ShowInfoAboutAllPlayers(_players);
                         break;
                     case CommandExit:
                         isExit = true;
@@ -64,17 +65,9 @@ namespace lesson
 
         private void SortPlayerDamage()
         {
-            int numberTop = 3;
-            var topPlayersLevel = _players.OrderByDescending(player => player.Damage).Take(numberTop);
+            var topPlayersLevel = _players.OrderByDescending(player => player.Damage).Take(_numberTop);
             Console.WriteLine("Рейтинг ТОП-3 по силе:");
-
-            foreach (var player in topPlayersLevel)
-            {
-                player.ShowInfo();
-            }
-
-            Console.ReadKey();
-            Console.Clear();
+            ShowInfoAboutAllPlayers(topPlayersLevel.ToList());
         }
 
         private void SortPlayerLevel()
@@ -82,14 +75,7 @@ namespace lesson
             int numberTop = 3;
             var topPlayersLevel = _players.OrderByDescending(player => player.Level).Take(numberTop);
             Console.WriteLine("Рейтинг ТОП-3 по уровню:");
-
-            foreach (var player in topPlayersLevel)
-            {
-                player.ShowInfo();
-            }
-
-            Console.ReadKey();
-            Console.Clear();
+            ShowInfoAboutAllPlayers(topPlayersLevel.ToList());
         }
 
         private void FillDataBase()
@@ -108,9 +94,9 @@ namespace lesson
             _players.Add(new Player("Распремлятор", 22, 83));
         }
 
-        private void ShowInfoAboutAllPlayers()
+        private void ShowInfoAboutAllPlayers(List<Player> players)
         {
-            foreach (var player in _players)
+            foreach (var player in players)
             {
                 player.ShowInfo();
             }
