@@ -40,19 +40,18 @@ namespace lesson
             Console.WriteLine("Делаем добрые дела..");
             System.Threading.Thread.Sleep(1000);
             DoAmnesty();
+            Console.Clear();
+            Console.WriteLine($"Список преступников после амнистии:");
+            ShowPrisoners();
+            Console.ReadKey();
+            Console.Clear();
         }
 
         private void DoAmnesty()
         {
             const string PoliticCrime = "Антиправительственное";
 
-            var notAmnistedPrisoners = _prisoners.Where(prisoner => prisoner.Crime != PoliticCrime);
-            _prisoners = notAmnistedPrisoners.ToList();
-            Console.Clear();
-            Console.WriteLine($"Список преступников после амнистии:");
-            ShowPrisoners();
-            Console.ReadKey();
-            Console.Clear();
+            _prisoners = _prisoners.Where(prisoner => prisoner.Crime != PoliticCrime).ToList();
         }
 
         private void FillDataBase()
