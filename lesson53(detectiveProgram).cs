@@ -61,12 +61,12 @@ namespace lesson
         private void FilteredCriminal()
         {
             Console.Write("Введите рост преступника: ");
-            InputIsNumber(out int inputGrowth);           
+            int inputGrowth = InputParameter();
             Console.Write("Введите вес преступника: ");
-            InputIsNumber(out int inputWeith);
+            int inputWeith = InputParameter();
             Console.Write("Введите национальность преступника: ");
             string inputNationality = Console.ReadLine();
-            var filteredCriminals = _criminals.Where(criminal => criminal.Growth == inputGrowth && criminal.Weith == inputWeith && 
+            var filteredCriminals = _criminals.Where(criminal => criminal.Growth == inputGrowth && criminal.Weith == inputWeith &&
             criminal.Nationality == inputNationality && criminal.IsPrisoner == false);
             Console.Clear();
             Console.WriteLine($"Список преступников по вашему запросу:  Рост - {inputGrowth}, Вес - {inputWeith}," +
@@ -88,10 +88,10 @@ namespace lesson
             Console.Clear();
         }
 
-        private void InputIsNumber(out int parameter)
+        private int InputParameter()
         {
             string inputParameter = Console.ReadLine();
-            bool inputParamIsNumber = int.TryParse(inputParameter, out parameter);
+            bool inputParamIsNumber = int.TryParse(inputParameter, out int parameter);
 
             while (inputParamIsNumber == false)
             {
@@ -99,6 +99,8 @@ namespace lesson
                 inputParameter = Console.ReadLine();
                 inputParamIsNumber = int.TryParse(inputParameter, out parameter);
             }
+
+            return parameter;
         }
 
         private void FillDataBase()
