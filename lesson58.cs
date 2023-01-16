@@ -27,18 +27,20 @@ namespace lesson
 
         public void Start()
         {
-            Console.WriteLine("Добро пожаловать в программу поиска солдат по вашим запросам\nЗапросы которые мы можем обработать:");
+            Console.WriteLine("Добро пожаловать в программу отчета о вооружении:");
+            Console.WriteLine("Список военнослужащих до выполнения программы: ");
+            ShowInfoAboutAllSoldiers();
+            Console.WriteLine("Нажмите любую кнопку..");
+            Console.ReadKey();
+            Console.Clear();
+            var newListSoldiers = _soldiers.Select(soldier => new { Name = soldier.Name, Rank = soldier.Rank });
+            Console.WriteLine("Список военнослужащих после выполнения программы: ");
 
-            Console.Write("Ваш ввод: ");
-            var filteredWeaponSoldiers = _soldiers.Where(soldier => soldier.Name != null && soldier.Name != null).
-
-            foreach (var soldier in filteredWeaponSoldiers)
+            foreach (var soldier in newListSoldiers)
             {
-                Console.WriteLine(soldier);
-            } 
+                Console.WriteLine(soldier.Name + " - " + soldier.Rank);
+            }
         }
-
-
 
         private void FillDataBase()
         {
@@ -52,11 +54,11 @@ namespace lesson
             _soldiers.Add(new Soldier("Семен", "Автомат", "сержант", 60));
         }
 
-        private void ShowInfoAboutAllSoldiers(List<Soldier> soldiers)
+        private void ShowInfoAboutAllSoldiers()
         {
             Console.WriteLine("\nСписок всех военнослужащих: ");
 
-            foreach (var soldier in soldiers)
+            foreach (var soldier in _soldiers)
             {
                 soldier.ShowInfo();
             }
@@ -85,9 +87,5 @@ namespace lesson
         {
             Console.WriteLine($"Имя - {Name}  Оружие - {Weapon}  Звание - {Rank}  Срок службы - {WorkTime}");
         }
-
-        public void ShowFiltered()
-        {
-            Console.WriteLine($"Имя - {Name}  Звание - {Rank}");
-        }
     }
+}
