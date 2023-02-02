@@ -11,20 +11,58 @@ namespace lesson
         static void Main(string[] args)
         {
             CarService carService = new CarService();
-            carService.StartWork();
+        }
+    }
+
+    class Storehouse
+    {
+        public List<Cell> Cells { get; private set; }
+
+        public Storehouse()
+        {
+            Cells = new List<Cell>();
+            FillCells();
+        }
+
+        public void RemoveCell(Cell cell)
+        {
+            Cells.Remove(cell);
+        }
+
+        public void ShowSpareParts()
+        {
+            Console.Clear();
+            Console.WriteLine("У нас на складе есть следующие комплектующие для автомобиля:\n");
+
+            foreach (var cell in Cells)
+            {
+                cell.ShowInfo();
+            }
+
+            Console.WriteLine("\nНажмите любую клавишу длявыхода в меню..");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        private void FillCells()
+        {
+            Cells.Add(new Cell(Part.GRM, "Ремень ГРМ", 5, new GRM()));
+            Cells.Add(new Cell(Part.Wheel, "Колесо", 11, new Wheel()));
+            Cells.Add(new Cell(Part.SparkPlug, "Свечи зажигания", 30, new SparkPlug()));
+            Cells.Add(new Cell(Part.WindShield, "Лобовое стекло", 9, new WindShield()));
         }
     }
 
     class CarService
     {
+        Storehouse storehouse = new Storehouse();
         private int _balance = 1000000;
-        private List<Cell> _cells = new List<Cell>();
         private int _priceWork = 3000;
         private int _fine = 5000;
 
         public CarService()
         {
-            FillCells();
+            StartWork();
         }
 
         public void StartWork()
@@ -47,7 +85,7 @@ namespace lesson
                 switch (playerInput)
                 {
                     case CommandShowPrices:
-                        ShowSpareParts();
+                        storehouse.ShowSpareParts();
                         break;
                     case CommandFixCar:
                         RepairCar(client);
@@ -57,21 +95,6 @@ namespace lesson
                         break;
                 }
             }
-        }
-
-        public void ShowSpareParts()
-        {
-            Console.Clear();
-            Console.WriteLine("У нас на складе есть следующие комплектующие для автомобиля:\n");
-
-            foreach (var cell in _cells)
-            {
-                cell.ShowInfo();
-            }
-
-            Console.WriteLine("\nНажмите любую клавишу длявыхода в меню..");
-            Console.ReadKey();
-            Console.Clear();
         }
 
         private void RepairCar(Client client)
@@ -84,7 +107,7 @@ namespace lesson
             Console.WriteLine("Смотрим..");
             System.Threading.Thread.Sleep(1000);
 
-            foreach (var cell in _cells)
+            foreach (var cell in storehouse.Cells)
             {
                 if (cell.Part == client.BrokenDetail)
                 {
@@ -136,7 +159,7 @@ namespace lesson
 
                 if (cell.CountDetails == 0)
                 {
-                    _cells.Remove(cell);
+                    storehouse.RemoveCell(cell);
                 }
 
                 Console.WriteLine("Машина починина, езжайте с Богом..");
@@ -145,14 +168,6 @@ namespace lesson
             {
                 Console.WriteLine("Клиент оказался не способен оплатить заказ, гоните его в щи");
             }
-        }
-
-        private void FillCells()
-        {
-            _cells.Add(new Cell(Part.GRM, "Ремень ГРМ", 5, new GRM()));
-            _cells.Add(new Cell(Part.Wheel, "Колесо", 11, new Wheel()));
-            _cells.Add(new Cell(Part.SparkPlug, "Свечи зажигания", 30, new SparkPlug()));
-            _cells.Add(new Cell(Part.WindShield, "Лобовое стекло", 9, new WindShield()));
         }
     }
 
@@ -181,7 +196,6 @@ namespace lesson
             {
                 return false;
             }
-
         }
 
         private Part GetBrokenDetail()
@@ -202,9 +216,9 @@ namespace lesson
         public Cell(Part part, string name, int countDetails, Detail detail)
         {
             Name = name;
-            CountDetails = countDetails;
+            CountDetails = _details.Count;
             Part = part;
-            PriceDetail = detail.GetPrice();
+            PriceDetail = detail.Price;
 
             for (int i = 0; i < countDetails; i++)
             {
@@ -217,10 +231,9 @@ namespace lesson
             Console.WriteLine($"{Name} - {PriceDetail} руб, в наличии {_details.Count} штук");
         }
 
-        public int RemoveDetail()
+        public void RemoveDetail()
         {
             _details.RemoveAt(0);
-            return CountDetails--;
         }
 
         private void FillParts(Detail detail)
@@ -268,16 +281,11 @@ namespace lesson
     class Detail
     {
         protected string Name;
-        protected int Price;
+        public int Price { get; protected set; }
 
         public virtual void ShowInfo()
         {
             Console.WriteLine($"Деталь: {Name}, цена: {Price} дереянных");
-        }
-
-        public virtual int GetPrice()
-        {
-            return Price;
         }
     }
 
