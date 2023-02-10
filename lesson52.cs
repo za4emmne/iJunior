@@ -16,17 +16,16 @@ namespace lesson
 
     class Storehouse
     {
-        public List<Cell> Cells { get; private set; }
+        private List<Cell> _cells = new List<Cell>();
 
         public Storehouse()
         {
-            Cells = new List<Cell>();
-            FillCells();
+            FillStorehouse();
         }
 
         public void RemoveCell(Cell cell)
         {
-            Cells.Remove(cell);
+            _cells.Remove(cell);
         }
 
         public void ShowSpareParts()
@@ -34,7 +33,7 @@ namespace lesson
             Console.Clear();
             Console.WriteLine("У нас на складе есть следующие комплектующие для автомобиля:\n");
 
-            foreach (var cell in Cells)
+            foreach (var cell in _cells)
             {
                 cell.ShowInfo();
             }
@@ -44,18 +43,37 @@ namespace lesson
             Console.Clear();
         }
 
-        private void FillCells()
+        public Cell TryBrokenCell(Part part)
         {
-            Cells.Add(new Cell(Part.GRM, "Ремень ГРМ", 5, new GRM()));
-            Cells.Add(new Cell(Part.Wheel, "Колесо", 11, new Wheel()));
-            Cells.Add(new Cell(Part.SparkPlug, "Свечи зажигания", 30, new SparkPlug()));
-            Cells.Add(new Cell(Part.WindShield, "Лобовое стекло", 9, new WindShield()));
+            Cell findCell = null;
+
+            foreach (var cell in _cells)
+            {
+                if (cell.Part == part)
+                {
+                    findCell = cell;
+                }
+            }
+
+            return findCell;
+        }
+
+        private void FillStorehouse()
+        {
+            Detail grm = new Detail("Ремень ГРМ", 6000);
+            Detail sparkPlug = new Detail("Свеча зажигания", 500);
+            Detail windShield = new Detail("Лобовое стекло", 8000);
+            Detail wheel = new Detail("Кодесо", 4000);
+            _cells.Add(new Cell(Part.ГРМ, "Ремень ГРМ", 5, grm));
+            _cells.Add(new Cell(Part.Колесо, "Колесо", 11, wheel));
+            _cells.Add(new Cell(Part.Свеча, "Свеча зажигания", 30, sparkPlug));
+            _cells.Add(new Cell(Part.Лобовуха, "Лобовое стекло", 9, windShield));
         }
     }
 
     class CarService
     {
-        Storehouse storehouse = new Storehouse();
+        private Storehouse _storehouse = new Storehouse();
         private int _balance = 1000000;
         private int _priceWork = 3000;
         private int _fine = 5000;
@@ -65,7 +83,7 @@ namespace lesson
             StartWork();
         }
 
-        public void StartWork()
+        private void StartWork()
         {
             bool isExit = false;
 
@@ -74,7 +92,6 @@ namespace lesson
                 const string CommandShowPrices = "1";
                 const string CommandFixCar = "2";
                 const string CommandExit = "0";
-
                 Client client = new Client();
                 Console.WriteLine("Добро пожаловать в автосервис КАЛИНА-МАЛИНА\nВыберите пункт меню:");
                 Console.WriteLine($"НАЖМИТЕ {CommandShowPrices} - Цена и наличие комплектующих\nНАЖМИТЕ {CommandFixCar} - Провести диагностику " +
@@ -85,7 +102,7 @@ namespace lesson
                 switch (playerInput)
                 {
                     case CommandShowPrices:
-                        storehouse.ShowSpareParts();
+                        _storehouse.ShowSpareParts();
                         break;
                     case CommandFixCar:
                         RepairCar(client);
@@ -106,17 +123,19 @@ namespace lesson
             System.Threading.Thread.Sleep(1000);
             Console.WriteLine("Смотрим..");
             System.Threading.Thread.Sleep(1000);
+            Cell brokenCell = _storehouse.TryBrokenCell(client.BrokenDetail);
 
-            foreach (var cell in storehouse.Cells)
+            if (brokenCell != null)
             {
-                if (cell.Part == client.BrokenDetail)
-                {
-                    Console.WriteLine($"У вас сломан следующий узел: {cell.Name}");
-                    Troubleshoot(cell, client);
-                    break;
-                }
+                Console.WriteLine($"У вас сломан следующий узел: {brokenCell.Name}");
+                Troubleshoot(brokenCell, client);
+            }
+            else
+            {
+                Console.WriteLine("Сломанный узел не найден..");
             }
 
+            Console.ReadKey();
             Console.Clear();
         }
 
@@ -139,6 +158,7 @@ namespace lesson
             else
             {
                 Console.WriteLine($"Детали на складе закончились, просим прощения и готовы выплатить компенсацию(штраф) в размере: {_fine} руб.");
+
                 if (_balance > _fine)
                 {
                     _balance -= _fine;
@@ -159,7 +179,7 @@ namespace lesson
 
                 if (cell.CountDetails == 0)
                 {
-                    storehouse.RemoveCell(cell);
+                    _storehouse.RemoveCell(cell);
                 }
 
                 Console.WriteLine("Машина починина, езжайте с Богом..");
@@ -175,7 +195,6 @@ namespace lesson
     {
         private int _money;
         private Random _random = new Random();
-        public Part BrokenDetail { get; private set; }
 
         public Client()
         {
@@ -184,6 +203,8 @@ namespace lesson
             _money = _random.Next(minMoney, maxMoney);
             BrokenDetail = GetBrokenDetail();
         }
+
+        public Part BrokenDetail { get; private set; }
 
         public bool TryPayOff(int repairPrice)
         {
@@ -207,93 +228,62 @@ namespace lesson
 
     class Cell
     {
-        private List<Detail> _details = new List<Detail>();
+        public Cell(Part part, string name, int countDetails, Detail detail)
+        {
+            Name = name;
+            CountDetails = countDetails;
+            Part = part;
+            PriceDetail = detail.GetPrice();
+
+            for (int i = 0; i < countDetails; i++)
+            {
+                FillParts();
+            }
+        }
+
         public string Name { get; private set; }
         public int CountDetails { get; private set; }
         public int PriceDetail { get; private set; }
         public Part Part { get; private set; }
 
-        public Cell(Part part, string name, int countDetails, Detail detail)
-        {
-            Name = name;
-            CountDetails = _details.Count;
-            Part = part;
-            PriceDetail = detail.Price;
-
-            for (int i = 0; i < countDetails; i++)
-            {
-                FillParts(detail);
-            }
-        }
-
         public void ShowInfo()
         {
-            Console.WriteLine($"{Name} - {PriceDetail} руб, в наличии {_details.Count} штук");
+            Console.WriteLine($"{Name} - {PriceDetail} руб, в наличии {CountDetails} штук");
         }
 
         public void RemoveDetail()
         {
-            _details.RemoveAt(0);
+            CountDetails--;
         }
 
-        private void FillParts(Detail detail)
+        private void FillParts()
         {
-            _details.Add(detail);
-        }
-    }
-
-    class WindShield : Detail
-    {
-        public WindShield()
-        {
-            Name = "Лобовое стекло";
-            Price = 8000;
-        }
-    }
-
-    class SparkPlug : Detail
-    {
-        public SparkPlug()
-        {
-            Name = "Свечи зажигания";
-            Price = 500;
-        }
-    }
-
-    class Wheel : Detail
-    {
-        public Wheel()
-        {
-            Name = "Руль";
-            Price = 4000;
-        }
-    }
-
-    class GRM : Detail
-    {
-        public GRM()
-        {
-            Name = "Ремень ГРМ";
-            Price = 6000;
+            CountDetails++;
         }
     }
 
     class Detail
     {
-        protected string Name;
-        public int Price { get; protected set; }
+        private string _name;
+        private int _price;
 
-        public virtual void ShowInfo()
+        public Detail(string name, int price)
         {
-            Console.WriteLine($"Деталь: {Name}, цена: {Price} дереянных");
+            _name = name;
+            _price = price;
+        }
+
+        public int GetPrice()
+        {
+            return _price;
         }
     }
 
     enum Part
     {
-        GRM,
-        Wheel,
-        SparkPlug,
-        WindShield
+        ГРМ,
+        Колесо,
+        Свеча,
+        Лобовуха
     }
 }
