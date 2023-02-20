@@ -11,6 +11,7 @@ namespace lesson
         static void Main(string[] args)
         {
             CarService carService = new CarService();
+            carService.Work();
         }
     }
 
@@ -64,10 +65,10 @@ namespace lesson
             Detail sparkPlug = new Detail("Свеча зажигания", 500);
             Detail windShield = new Detail("Лобовое стекло", 8000);
             Detail wheel = new Detail("Кодесо", 4000);
-            _cells.Add(new Cell(Part.ГРМ, "Ремень ГРМ", 5, grm));
-            _cells.Add(new Cell(Part.Колесо, "Колесо", 11, wheel));
-            _cells.Add(new Cell(Part.Свеча, "Свеча зажигания", 30, sparkPlug));
-            _cells.Add(new Cell(Part.Лобовуха, "Лобовое стекло", 9, windShield));
+            _cells.Add(new Cell(Part.GRM, "Ремень ГРМ", 5, grm));
+            _cells.Add(new Cell(Part.Wheel, "Колесо", 11, wheel));
+            _cells.Add(new Cell(Part.SparkPlug, "Свеча зажигания", 30, sparkPlug));
+            _cells.Add(new Cell(Part.Windshield, "Лобовое стекло", 9, windShield));
         }
     }
 
@@ -78,12 +79,7 @@ namespace lesson
         private int _priceWork = 3000;
         private int _fine = 5000;
 
-        public CarService()
-        {
-            StartWork();
-        }
-
-        private void StartWork()
+        public void Work()
         {
             bool isExit = false;
 
@@ -233,7 +229,7 @@ namespace lesson
             Name = name;
             CountDetails = countDetails;
             Part = part;
-            PriceDetail = detail.GetPrice();
+            PriceDetail = detail.Price;
 
             for (int i = 0; i < countDetails; i++)
             {
@@ -265,25 +261,21 @@ namespace lesson
     class Detail
     {
         private string _name;
-        private int _price;
 
         public Detail(string name, int price)
         {
             _name = name;
-            _price = price;
+            Price = price;
         }
 
-        public int GetPrice()
-        {
-            return _price;
-        }
+        public int Price { get; private set; }
     }
 
     enum Part
     {
-        ГРМ,
-        Колесо,
-        Свеча,
-        Лобовуха
+        GRM,
+        Wheel,
+        SparkPlug,
+        Windshield
     }
 }
